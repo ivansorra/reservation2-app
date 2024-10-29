@@ -1,0 +1,28 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Nunito', Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+.divider {
+    display: block;
+    padding: 15px;
+    border: 1px solid #ccc; /* Border around the section */
+    border-radius: 10px; /* Rounded corners */
+    position: relative;
+    margin-bottom: 10px;
+
+}
+
+.divider span {
+    position: absolute;
+    top: -10px; /* Adjusts the position of the label */
+    left: 20px; /* Aligns the span to the left */
+    background-color: white; /* To match the background of the container */
+    padding: 0 10px;
+    color: #888;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-radius: 5px; /* Gives the span rounded corners */
+}
