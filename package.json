@@ -20,6 +20,7 @@
         "vue": "^3.2.37"
     },
     "dependencies": {
+        "flowbite": "^2.5.2",
         "qrcode": "^1.5.4",
         "vue-qrcode-reader": "^5.5.11",
         "vue-router": "^4.4.5"

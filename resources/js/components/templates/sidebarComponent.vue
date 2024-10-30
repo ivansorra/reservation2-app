@@ -4,11 +4,7 @@
         <div class="w-64 bg-white border-r">
             <div class="p-4 font-bold">Sidebar</div>
             <ul class="list-none">
-                <router-link
-                    to="#"
-                    class="block p-2 text-gray-700 hover:bg-gray-200"
-                    @click.native.prevent="$emit('load-form', 'membership')"
-                >
+                <router-link to="/admin/membership" class="block p-2 text-gray-700 hover:bg-gray-200">
                     Membership
                 </router-link>
                 <router-link
@@ -84,7 +80,7 @@
 
 <script>
 export default {
-    name: "Sidebar",
+    name: "sidebarComponent",
     data() {
         return {
             dropdownOpen: false,

@@ -45,6 +45,31 @@
                                 />
                             </div>
 
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-light"
+                                    ><i class="bx bx-mobile"></i
+                                ></span>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Contact Number"
+                                    aria-label="Contact Number"
+                                />
+                            </div>
+
+                            <!-- Address Field -->
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-light"
+                                    ><i class="bx bx-book"></i
+                                ></span>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Address"
+                                    aria-label="Address"
+                                />
+                            </div>
+
                             <!-- Birth Date Field -->
                             <div class="input-group mb-3">
                                 <span class="input-group-text bg-light"

@@ -3,6 +3,8 @@ import Login from './components/login/loginComponent.vue';
 import Form from './components/form/formComponent.vue';
 import QrCodeScanner from './components/scanner/QrScannerComponent.vue';
 import adminComponent from './components/templates/adminComponent.vue';
+import membershipForm from './components/admin/membershipForm.vue';
+import indexComponent from './components/admin/members/indexComponent.vue';
 
 const routes = [
   {
@@ -26,11 +28,18 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: adminComponent,
-    children: [{
-        path: '/dashboard',
-        name: 'dashboard',
-        component: {}
-    }]
+    children: [
+        {
+            path: '',
+            name: 'index',
+            component: indexComponent
+        },
+        {
+            path: 'membership',
+            name: 'membership',
+            component: membershipForm
+        }
+    ]
   }
 ];
 

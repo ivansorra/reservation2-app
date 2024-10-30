@@ -1,32 +1,19 @@
 <template>
     <div>
-        <Sidebar @load-form="handleLoadForm">
-            <component :is="currentComponent"></component>
-        </Sidebar>
+        <sidebarComponent>
+            <router-view></router-view>
+        </sidebarComponent>
     </div>
 </template>
 
 <script>
-import Sidebar from './sidebarComponent.vue';
+import sidebarComponent from './SideBarComponent.vue';
 import membershipForm from '../admin/membershipForm.vue';
 
 export default {
-    name: 'adminComponent',
-    components: {
-        Sidebar,
-        membershipForm,
-    },
-    data() {
-        return {
-            currentComponent: null,
-        };
-    },
-    methods: {
-        handleLoadForm(componentName) {
-            if (componentName === 'membership') {
-                this.currentComponent = 'membershipForm';
-            }
-        }
-    }
-}
+  name: 'adminComponent',
+  components: {
+    sidebarComponent,
+  },
+};
 </script>

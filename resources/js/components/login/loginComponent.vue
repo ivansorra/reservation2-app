@@ -18,6 +18,7 @@
                                 Which type of user are you?
                             </option>
                             <option value="member">Member</option>
+                            <option value="spouse">Spouse</option>
                             <option value="dependent">Dependent</option>
                             <option value="guest">Guest</option>
                         </select>
@@ -31,6 +32,17 @@
                             class="form-control"
                             id="member"
                             placeholder="Membership ID"
+                        />
+                    </div>
+
+                    <div v-if="userType === 'spouse'" class="mb-3">
+                        <label for="member">Membership ID:</label>
+                        <input
+                            type="text"
+                            v-model="memberID"
+                            class="form-control"
+                            id="member"
+                            placeholder="Primary Membership ID"
                         />
                     </div>
 
