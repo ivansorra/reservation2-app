@@ -1,13 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Membership;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Membership;
+use App\Models\UserRoles;
+use App\Http\Requests\UserRolesRequest;
 
-class MembershipController extends Controller
+class UserRolesController extends Controller
 {
+    public $userroles;
+    public $requests;
+
+    public function __construct(UserRoles $roles, UserRolesRequest $request){
+        $this->userroles = $roles;
+        $this->requests = $request;
+    }
+
     /**
      * Display a listing of the resource.
      */

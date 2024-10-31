@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Membership;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Membership;
+use App\Models\QrCode;
 
-class MembershipController extends Controller
+class QrCodeController extends Controller
 {
     /**
      * Display a listing of the resource.
