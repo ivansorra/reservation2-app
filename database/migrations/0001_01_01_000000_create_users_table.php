@@ -13,16 +13,30 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('user_id');
+            $table->unsignedInteger('membership_id')->nullable();
+            $table->foreign('membership_id')->references('membership_id')->on('membership');
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email_address')->unique();
+            $table->unsignedInteger('role_id');
+            $table->foreign('role_id')->references('role_id')->on('roles');
+            $table->date('birthdate');
+            $table->bigInteger('contact_no')->nullable();
+            $table->string('status');
+            $table->timestamps();
+        });
+
+        Schema::create('accounts', function(Blueprint $table){
+            $table->increments('account_id');
+            $table->increments('user_id');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('status');
             $table->rememberToken();
             $table->timestamps();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
+            $table->string('email_address')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });

@@ -12,7 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('qrcode', function (Blueprint $table) {
-            $table->id();
+            $table->increments('qr_id');
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('user_id')->on('users');
+            $table->unsignedInteger('reservation_id');
+            $table->foreign('reservation_id')->references('reservation_id')->on('reservations');
+            $table->string('qr_content');
+            $table->date('qr_expiration_start');
+            $table->date('qr_expiration_end');
+            $table->boolean('is_active');
             $table->timestamps();
         });
     }

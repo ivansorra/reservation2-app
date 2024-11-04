@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('membership_id');
             $table->string('membership_no');
             $table->unsignedInteger('user_id');
-
+            $table->foreign('user_id')->references('user_id')->on('users');
             $table->boolean('status');
             $table->timestamps();
         });
