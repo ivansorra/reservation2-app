@@ -11,7 +11,6 @@ class Membership extends Model
     protected $primaryKey = "membership_id";
     protected $fillable = [
         'membership_no',
-        'user_id',
         'status'
     ];
 

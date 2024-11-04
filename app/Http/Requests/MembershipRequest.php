@@ -5,12 +5,15 @@ namespace App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class UserRolesRequest
+class MembershipRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(Request $request)
-     {
+    {
         $validator = Validator::make($request->all(), [
-            'role_name' => 'required',
+            'membership_no' => 'required',
             'status' => 'required'
         ]);
 
@@ -19,5 +22,5 @@ class UserRolesRequest
         }
 
         return $validator;
-     }
+    }
 }

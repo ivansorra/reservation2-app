@@ -3,25 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\UserRoles;
+
 use App\Http\Requests\UserRolesRequest;
+
+use App\Services\RolesServices;
 
 class UserRolesController extends Controller
 {
     public $userroles;
     public $requests;
 
-    public function __construct(UserRoles $roles, UserRolesRequest $request){
+    public function __construct(RolesServices $roles){
         $this->userroles = $roles;
-        $this->requests = $request;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        return $this->userroles->getUserRoles($request);
     }
 
     /**
@@ -35,17 +33,17 @@ class UserRolesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, UserRolesRequest $userroleRequest)
     {
-        //
+        return $this->userroles->createRole($request, $userroleRequest);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request)
     {
-        //
+        return $this->userroles->getRoleById($request);
     }
 
     /**
@@ -59,16 +57,16 @@ class UserRolesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, UserRolesRequest $validate)
     {
-        //
+        return $this->userroles->updateRole($request, $validate);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        return $this->userroles->deleteRole($request);
     }
 }
