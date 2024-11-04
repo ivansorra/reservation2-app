@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->increments('user_id');
-            $table->unsignedInteger('membership_id')->nullable();
-            $table->foreign('membership_id')->references('membership_id')->on('membership');
+            $table->increments('user_id'); // Primary key for users
+            $table->unsignedInteger('membership_id')->nullable(); // Foreign key
+            $table->foreign('membership_id')->references('membership_id')->on('membership'); // Set to null if membership deleted
             $table->string('name');
             $table->string('email_address')->unique();
-            $table->unsignedInteger('role_id');
+            $table->unsignedInteger('role_id'); // Role foreign key
             $table->foreign('role_id')->references('role_id')->on('roles');
             $table->date('birthdate');
             $table->bigInteger('contact_no')->nullable();
@@ -25,9 +25,10 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('accounts', function(Blueprint $table){
+        Schema::create('accounts', function (Blueprint $table) {
             $table->increments('account_id');
-            $table->increments('user_id');
+            $table->unsignedInteger('user_id'); // Foreign key to `users`
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade'); // Ensure user exists
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('status');
@@ -43,7 +44,8 @@ return new class extends Migration
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->unsignedInteger('user_id')->nullable(); // Define user_id as nullable
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('set null'); // Add foreign key constraint
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
@@ -56,8 +58,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('accounts');
+        Schema::dropIfExists('users');
     }
 };

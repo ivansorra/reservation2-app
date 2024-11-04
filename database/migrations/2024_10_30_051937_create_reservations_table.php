@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('membership', function (Blueprint $table) {
-            $table->increments('membership_id');
-            $table->string('membership_no');
-            $table->unsignedInteger('user_id');
-            $table->foreign('user_id')->references('user_id')->on('users');
-            $table->boolean('status');
+        Schema::create('reservations', function (Blueprint $table) {
+            $table->increments('reservation_id');
+            $table->unsignedInteger('travel_id');
+            $table->foreign('travel_id')->references('travel_id')->on('travelinfo')->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('membership');
+        Schema::dropIfExists('reservations');
     }
 };
