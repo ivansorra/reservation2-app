@@ -7,6 +7,14 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [App\Http\Controllers\AuthenticationController::class, 'login']);
 });
 
+Route::prefix('members')->group(function (){
+    Route::get('/', [App\Http\Controllers\Membership\MembershipController::class, 'index']);
+    Route::get('/show', [App\Http\Controllers\Membership\MembershipController::class, 'show']);
+    Route::post('/create', [App\Http\Controllers\Membership\MembershipController::class, 'store']);
+    Route::put('/update', [App\Http\Controllers\Membership\MembershipController::class, 'update']);
+    Route::delete('/delete', [App\Http\Controllers\Membership\MembershipController::class, 'destroy']);
+});
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('v1')->group(function () {
         Route::prefix('roles')->group(function () {
