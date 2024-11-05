@@ -17,9 +17,9 @@ class Membership extends Model
         'status'
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
-    public function user(){
-        return $this->belongsTo('App\Models\User');
+    public function users(){
+        return $this->belongsToMany(User::class, 'member_user_pivot');
     }
 }

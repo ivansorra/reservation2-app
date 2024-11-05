@@ -53,7 +53,7 @@ class User extends Authenticatable
     }
 
     public function membership(){
-        return $this->hasOne(Membership::class);
+        return $this->belongsToMany(Membership::class, 'member_user_pivot');
     }
 
     public function accounts(){

@@ -13,7 +13,8 @@ class MembershipRequest
     public function authorize(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'membership_no' => 'required',
+            'membership_id' => 'sometimes|required',
+            'membership_no' => 'sometimes|required',
             'status' => 'required'
         ]);
 

@@ -28,9 +28,10 @@ class MembershipRepository implements MembershipInterface
 
     public function getMembership($id)
     {
-        return $this->members->find($id);
+        return $this->members->where('membership_id', $id)->first();
     }
 
+    // -=-------- This method will use only for "MEMBERS" --------------------------------
     public function createMembership($data, $userData)
     {
         $member = $this->members->firstOrCreate(
@@ -63,15 +64,37 @@ class MembershipRepository implements MembershipInterface
             'user' => $user
         ];
     }
-
-
-    public function updateMembership($id, $data)
+    // --------------------------------------------------------------------
+    public function updateMembership($membershipId, $data)
     {
-        return $this->members->update($id, $data);
+        $membership = $this->members->find($membershipId);
+
+        if (!$membership) {
+            throw new \Exception('Membership not found.');
+        }
+
+        $membership->update($data);
+
+        return $membership;
     }
 
     public function deleteMembership($id)
     {
-        return $this->members->find($id)->delete();
+        $membership = $this->members->find($id);
+
+        if (!$membership) {
+            throw new \Exception('Membership not found.');
+        }
+
+        $users = $this->users->where('membership_id', $membership->membership_id);
+
+        if($users)
+        {
+            $users->delete();
+        }
+
+        return $membership->delete();
     }
+
+
 }

@@ -106,15 +106,15 @@ class MembershipServices
             return $this->errorResponse($e, 'Error');
         }
     }
-
     public function deleteMember(Request $request)
     {
         try {
             $member_id = $request->get('member_id');
             $delete_member = $this->membershipRepository->deleteMembership($member_id);
-            return $this->successResponse($delete_member, 'Success');
+            return $this->successResponse(null, 'Membership and associated users deleted successfully.');
         } catch (\Exception $e) {
             return $this->errorResponse($e, 'Error');
         }
     }
+
 }

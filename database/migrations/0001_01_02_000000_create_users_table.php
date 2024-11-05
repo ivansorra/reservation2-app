@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('user_id'); // Primary key for users
             $table->unsignedInteger('membership_id')->nullable(); // Foreign key
-            $table->foreign('membership_id')->references('membership_id')->on('membership'); // Set to null if membership deleted
+            $table->foreign('membership_id')->references('membership_id')->on('membership')->onDelete('cascade');
             $table->string('name');
             $table->string('email_address')->unique();
             $table->unsignedInteger('role_id')->nullable(); // Role foreign key
