@@ -7,7 +7,7 @@
                         <h2 class="mb-0"><b>Reservation Form</b></h2>
                     </div>
                     <div class="card-body p-4">
-                        <form>
+                        <form @submit.prevent="submitForm">
                             <!-- Email Address -->
                             <div class="input-group mb-3">
                                 <span class="input-group-text bg-light"
@@ -18,6 +18,7 @@
                                     class="form-control"
                                     placeholder="Email Address"
                                     aria-label="Email Address"
+                                    v-model="emailAddress"
                                 />
                             </div>
 
@@ -29,11 +30,12 @@
                                 <input
                                     type="text"
                                     class="form-control"
-                                    placeholder="First Name"
-                                    aria-label="First Name"
+                                    placeholder="Name"
+                                    aria-label="Name"
+                                    v-model="fullName"
                                 />
                             </div>
-                            <div class="input-group mb-3">
+                            <!-- <div class="input-group mb-3">
                                 <span class="input-group-text bg-light"
                                     ><i class="bx bx-id-card"></i
                                 ></span>
@@ -43,7 +45,7 @@
                                     placeholder="Last Name"
                                     aria-label="Last Name"
                                 />
-                            </div>
+                            </div> -->
 
                             <div class="input-group mb-3">
                                 <span class="input-group-text bg-light"
@@ -54,6 +56,7 @@
                                     class="form-control"
                                     placeholder="Contact Number"
                                     aria-label="Contact Number"
+                                    v-model="contactNumber"
                                 />
                             </div>
 
@@ -67,6 +70,7 @@
                                     class="form-control"
                                     placeholder="Address"
                                     aria-label="Address"
+                                    v-model="address"
                                 />
                             </div>
 
@@ -80,6 +84,7 @@
                                     class="form-control"
                                     placeholder="Birth Date"
                                     aria-label="Birth Date"
+                                    v-model="birthDate"
                                 />
                             </div>
 
@@ -90,6 +95,7 @@
                                     type="date"
                                     class="form-control"
                                     id="travelstart"
+                                    v-model="travelStart"
                                 />
                             </div>
 
@@ -100,6 +106,7 @@
                                     type="date"
                                     class="form-control"
                                     id="travelend"
+                                    v-model="travelEnd"
                                 />
                             </div>
 
@@ -114,6 +121,7 @@
                                         id="emergencyName"
                                         name="emergencyName"
                                         class="form-control"
+                                        v-model="contactEmergencyName"
                                         required
                                     />
                                 </div>
@@ -126,6 +134,7 @@
                                         type="tel"
                                         id="emergencyContact"
                                         name="emergencyContact"
+                                        v-model="contactEmergencyNumber"
                                         class="form-control"
                                     />
                                 </div>
@@ -138,6 +147,7 @@
                                         type="text"
                                         id="emergencyAddress"
                                         name="emergencyAddress"
+                                        v-model="contactEmergencyAddress"
                                         class="form-control"
                                     />
                                 </div>
@@ -150,6 +160,7 @@
                                         id="relationship"
                                         name="relationship"
                                         class="form-control"
+                                        v-model="contactEmergencyRelationship"
                                     >
                                         <option value="">Select</option>
                                         <option value="father">Father</option>
@@ -357,6 +368,32 @@ export default {
         const waiverModal = ref(null);
         const isCheckboxChecked = ref(false);
 
+        // This below block is for auto-populating fields in form
+        const emailAddress = ref("");
+        const fullName = ref("");
+        const emailAdd = ref("");
+        const contactNumber = ref("");
+        const birthDate = ref("");
+        const address = ref("");
+        const travelStart = ref("");
+        const travelEnd = ref("");
+        const contactEmergencyName = ref("");
+        const contactEmergencyNumber = ref("");
+        const contactEmergencyAddress = ref("");
+        const contactEmergencyRelationship = ref("");
+
+        const autoFillForm = () => {
+            const memberInfo = JSON.parse(sessionStorage.getItem('memberInfo'));
+
+            if(memberInfo) {
+                emailAddress.value = memberInfo.email_address;
+                fullName.value = memberInfo.member_name;
+                contactNumber.value = memberInfo.contact_no;
+                birthDate.value = memberInfo.birthdate;
+                address.value = memberInfo.member_address;
+            }
+        }
+
         const showWaiverModal = (event) => {
             isCheckboxChecked.value = event.target.checked;
             if (isCheckboxChecked.value) {
@@ -374,18 +411,30 @@ export default {
             document.getElementById("waiver").checked = true;
         };
 
+        const submitForm = async () => {
+
+        }
+
         onMounted(() => {
             waiverModal.value = new bootstrap.Modal(
                 document.getElementById("waiverModal")
             );
+            autoFillForm();
         });
 
         return {
+            emailAddress,
+            fullName,
+            emailAdd,
+            contactNumber,
+            birthDate,
+            address,
             showWaiverModal,
             acceptWaiver,
             closeModal,
             isAlternateChecked,
             altEmail,
+            autoFillForm
         };
     },
 };

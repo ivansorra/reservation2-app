@@ -31,6 +31,14 @@ Route::prefix('users')->group(function() {
     Route::delete('/delete', [App\Http\Controllers\UsersController::class, 'destroy']);
 });
 
+Route::prefix('reservations')->group(function() {
+    Route::get('/', [App\Http\Controllers\FlightReservationController::class, 'index']);
+    Route::get('/show', [App\Http\Controllers\FlightReservationController::class,'show']);
+    Route::post('/create', [App\Http\Controllers\FlightReservationController::class,'store']);
+    Route::put('/update', [App\Http\Controllers\FlightReservationController::class, 'update']);
+    Route::delete('/delete', [App\Http\Controllers\FlightReservationController::class, 'destroy']);
+});
+
 // Route::middleware(['auth:sanctum'])->group(function () {
 //     Route::prefix('v1')->group(function () {
 

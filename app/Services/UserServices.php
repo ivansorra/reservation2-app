@@ -12,8 +12,6 @@ use Illuminate\Http\JsonResponse;
 
 use App\Traits\ResponseTraits;
 
-use function PHPUnit\Framework\isEmpty;
-
 class UserServices
 {
     use ResponseTraits;

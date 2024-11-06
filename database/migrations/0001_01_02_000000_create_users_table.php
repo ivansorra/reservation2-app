@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('membership_id')->nullable(); // Foreign key
             $table->foreign('membership_id')->references('membership_id')->on('membership')->onDelete('cascade');
             $table->string('name');
+            $table->string('address');
             $table->string('email_address')->unique();
             $table->date('birthdate');
             $table->bigInteger('contact_no')->nullable();

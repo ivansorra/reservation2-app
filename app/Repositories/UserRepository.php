@@ -33,6 +33,7 @@ class UserRepository implements UsersInterface
         $user = $this->users->firstOrCreate([
             'membership_id' => $data['membership_id'],
             'name' => $data['name'],
+            'address' => $data['address'],
             'email_address' => $data['email_address'],
             'birthdate' => Carbon::parse($data['birthdate'])->format('Y-m-d'),
             'contact_no' => $data['contact_no'],

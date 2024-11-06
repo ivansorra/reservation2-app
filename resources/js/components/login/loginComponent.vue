@@ -119,8 +119,7 @@ export default {
                         // console.log(userType)
                         if(userType.value === response.data.data.role_name)
                         {
-                            console.log("same");
-                            localStorage.setItem('memberInfo', JSON.stringify(response.data.data));
+                            sessionStorage.setItem('memberInfo', JSON.stringify(response.data.data));
                         }
 
                         router.push("/reservation_form");

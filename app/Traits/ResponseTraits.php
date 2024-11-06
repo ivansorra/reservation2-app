@@ -17,7 +17,7 @@ trait ResponseTraits
             'success' => true,
             'message' => $message,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     /**
@@ -32,8 +32,8 @@ trait ResponseTraits
         return response()->json([
             'success' => false,
             'message' => $message,
-            'server_response' => 'error'
-            // 'error' => $e->getMessage() ?? $e
-        ]);
+            'server_response' => 'error',
+            'error' => $e->getMessage()
+        ], 500);
     }
 }

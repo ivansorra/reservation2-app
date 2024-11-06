@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class UserRequest
+class FlightReservationRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,12 +14,8 @@ class UserRequest
     {
         $validator = Validator::make($request->all(), [
             'user_id' => 'sometimes|required',
-            'name' => 'sometimes|required',
-            'address' => 'sometimes|required',
-            'email_address' => 'sometimes|required|email',
-            'birthdate' => 'sometimes|required',
-            'contact_no' => 'sometimes|required',
-            'user_status' => 'sometimes|required'
+            'arrival_date' => 'sometimes|required|date',
+            'return_date' => 'sometimes|required|date',
         ]);
 
         if ($validator->fails()) {

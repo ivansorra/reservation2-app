@@ -45,8 +45,10 @@ class MembershipRepository implements MembershipInterface
         $roles = $this->roles->where('role_id', $role->role_id)->first();
 
         $memberResp = [
+            'user_id' => $user->user_id,
             'membership_no' => $member->membership_no,
             'member_name' => $user->name,
+            'member_address' => $user->address,
             'email_address' => $user->email_address,
             'birthdate' => $user->birthdate,
             'user_status' => $user->user_status == 1 ? 'active' : 'inactive',
@@ -76,6 +78,7 @@ class MembershipRepository implements MembershipInterface
             ],
             [
                 'name' => $userData['name'],
+                'address' => $userData['address'],
                 'email_address' => $userData['email_address'],
                 'birthdate' => Carbon::parse($userData['birthdate'])->format('Y-m-d'),
                 'contact_no' => $userData['contact_no'],
