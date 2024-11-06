@@ -10,8 +10,9 @@ class UserRolesRequest
     public function authorize(Request $request)
      {
         $validator = Validator::make($request->all(), [
-            'role_name' => 'required',
-            'status' => 'required'
+            'role_id' => 'sometimes|required',
+            'role_name' => 'sometimes|required',
+            'status' => 'sometimes|required'
         ]);
 
         if ($validator->fails()) {

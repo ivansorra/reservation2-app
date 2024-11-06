@@ -31,7 +31,15 @@ class RolesRepository implements UserRolesInterface
 
     public function updateRoles($id, $roles)
     {
-        return $this->userrole->update($id, $roles);
+        $role = $this->userrole->find($id);
+
+        if (!$role) {
+            throw new \Exception('User role not found.');
+        }
+
+        $role->update($roles);
+
+        return $role;
     }
 
     public function deleteRoles($id)

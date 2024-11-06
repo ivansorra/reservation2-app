@@ -23,6 +23,14 @@ Route::prefix('roles')->group(function () {
     Route::delete('/delete', [App\Http\Controllers\UserRolesController::class, 'destroy']);
 });
 
+Route::prefix('users')->group(function() {
+    Route::get('/', [App\Http\Controllers\UsersController::class, 'index']);
+    Route::get('/show', [App\Http\Controllers\UsersController::class,'show']);
+    Route::post('/create', [App\Http\Controllers\UsersController::class, 'store']);
+    Route::put('/update', [App\Http\Controllers\UsersController::class, 'update']);
+    Route::delete('/delete', [App\Http\Controllers\UsersController::class, 'destroy']);
+});
+
 // Route::middleware(['auth:sanctum'])->group(function () {
 //     Route::prefix('v1')->group(function () {
 

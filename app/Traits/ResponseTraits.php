@@ -32,8 +32,8 @@ trait ResponseTraits
         return response()->json([
             'success' => false,
             'message' => $message,
-            'server_response' => 'error',
-            'error' => $e->getMessage()
+            'server_response' => 'error'
+            // 'error' => $e->getMessage() ?? $e
         ]);
     }
 }

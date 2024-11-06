@@ -49,11 +49,22 @@ class MembershipServices
     public function getMemberById(Request $request)
     {
         try {
-            $member_no = $request->get('member_no');
+            $member_id = $request->get('membership_no');
 
-            $get_member_no = $this->membershipRepository->getMembership($member_no);
+            $get_member_id = $this->membershipRepository->getMembershipNo($member_id);
 
-            return $this->successResponse($get_member_no, 'Success');
+            if($get_member_id)
+            {
+                return $this->successResponse($get_member_id, 'Sucessfully retrieved membership');
+            }
+            else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Membership not found',
+                    'server_response' => 'error'
+                ]);
+            }
+
         } catch (\Exception $e) {
             return $this->errorResponse($e, 'Error');
         }
@@ -76,7 +87,12 @@ class MembershipServices
             }
 
             $membersValidatedData = $membersValidator->validated();
+
+            $membersValidatedData['status'] = $membersValidatedData['status'] == 'active' ? true : false;
+
             $usersValidatedData = $usersValidator->validated();
+
+            $usersValidatedData['user_status'] = $usersValidatedData['user_status'] == 'active' ? true : false;
 
             $create_member = $this->membershipRepository->createMembership($membersValidatedData, $usersValidatedData);
 

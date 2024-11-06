@@ -13,11 +13,12 @@ class UserRequest
     public function authorize(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email_address' => 'required|email',
-            'birthdate' => 'required',
-            'contact_no' => 'required',
-            'user_status' => 'required'
+            'user_id' => 'sometimes|required',
+            'name' => 'sometimes|required',
+            'email_address' => 'sometimes|required|email',
+            'birthdate' => 'sometimes|required',
+            'contact_no' => 'sometimes|required',
+            'user_status' => 'sometimes|required'
         ]);
 
         if ($validator->fails()) {

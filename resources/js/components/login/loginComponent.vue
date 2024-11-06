@@ -28,10 +28,11 @@
                         <label for="member">Membership ID:</label>
                         <input
                             type="text"
-                            v-model="memberID"
+                            v-model="membership_no"
                             class="form-control"
                             id="member"
                             placeholder="Membership ID"
+                            required
                         />
                     </div>
 
@@ -39,10 +40,11 @@
                         <label for="member">Membership ID:</label>
                         <input
                             type="text"
-                            v-model="memberID"
+                            v-model="membership_no"
                             class="form-control"
                             id="member"
                             placeholder="Primary Membership ID"
+                            required
                         />
                     </div>
 
@@ -54,6 +56,7 @@
                             class="form-control"
                             id="dependent"
                             placeholder="Primary Member ID"
+                            required
                         />
                     </div>
 
@@ -67,6 +70,7 @@
                             class="form-control"
                             id="sponsoring"
                             placeholder="Sponsoring Member ID"
+                            required
                         />
                     </div>
 
@@ -89,7 +93,7 @@ import axios from "axios";
 export default {
     setup() {
         const userType = ref("");
-        const memberID = ref("");
+        const membership_no = ref("");
         const primaryMemberID = ref("");
         const sponsoringMemberID = ref("");
         const router = useRouter();
@@ -97,24 +101,34 @@ export default {
         const reservationForm = async () => {
             // Prepare form data
             const formData = {
-                userType: userType.value,
-                memberID: memberID.value || null,
-                primaryMemberID: primaryMemberID.value || null,
-                sponsoringMemberID: sponsoringMemberID.value || null,
+                membership_no: membership_no.value || null,
             };
 
             // On this line will insert the api call in Intimus
             try {
-                //   const response = await axios.post('/your-api-endpoint', formData, {
-                //     headers: {
-                //       'Content-Type': 'application/json',
-                //       'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                //     },
-                //   });
+                const response = await axios.get('http://localhost:8000/api/members/show', {
+                    params: formData,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                });
 
-                //   console.log('Form submitted successfully:', response.data);
+                if (response.data) {
+                    if (response.data.data && Object.keys(response.data.data).length > 0) {
+                        // console.log(userType)
+                        if(userType.value === response.data.data.role_name)
+                        {
+                            console.log("same");
+                            localStorage.setItem('memberInfo', JSON.stringify(response.data.data));
+                        }
 
-                router.push({ name: "form" });
+                        router.push("/reservation_form");
+                    } else {
+                        console.log(response.data.message);
+                    }
+                }
+
             } catch (error) {
                 console.error("Error submitting form:", error);
             }
@@ -122,14 +136,14 @@ export default {
 
         const updateUserType = () => {
             // Reset input fields when userType changes
-            memberID.value = "";
+            membership_no.value = "";
             primaryMemberID.value = "";
             sponsoringMemberID.value = "";
         };
 
         return {
             userType,
-            memberID,
+            membership_no,
             primaryMemberID,
             sponsoringMemberID,
             updateUserType,

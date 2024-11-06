@@ -17,8 +17,6 @@ return new class extends Migration
             $table->foreign('membership_id')->references('membership_id')->on('membership')->onDelete('cascade');
             $table->string('name');
             $table->string('email_address')->unique();
-            $table->unsignedInteger('role_id')->nullable(); // Role foreign key
-            $table->foreign('role_id')->references('role_id')->on('roles');
             $table->date('birthdate');
             $table->bigInteger('contact_no')->nullable();
             $table->boolean('user_status')->default(1);

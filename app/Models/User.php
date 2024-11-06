@@ -22,7 +22,6 @@ class User extends Authenticatable
         'membership_id',
         'name',
         'email_address',
-        'role_id',
         'birthdate',
         'contact_no',
         'user_status',
@@ -53,7 +52,7 @@ class User extends Authenticatable
     }
 
     public function membership(){
-        return $this->belongsToMany(Membership::class, 'member_user_pivot');
+        return $this->belongsTo(Membership::class, 'membership_id');
     }
 
     public function accounts(){
@@ -62,9 +61,8 @@ class User extends Authenticatable
 
     public function user_roles()
     {
-        return $this->belongsToMany(UserRoles::class, 'role_user')
-                    ->using(RoleUsers::class) // Reference the pivot model if needed
-                    ->withPivot('status', 'created_at', 'updated_at') // Include additional fields on the pivot
-                    ->withTimestamps();
+        return $this->belongsToMany(UserRoles::class, 'role_user', 'user_id', 'role_id')
+                ->withPivot('status')
+                ->withTimestamps();
     }
 }

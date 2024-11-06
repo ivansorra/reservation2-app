@@ -16,7 +16,7 @@ const routes = [
     path: '/reservation_form',
     name: 'form',
     component: Form,
-    meta: { requiresAuth: true }
+    // meta: { requiresAuth: true }
   },
   {
     path: '/scanner',

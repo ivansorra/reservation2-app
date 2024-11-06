@@ -5,20 +5,23 @@ namespace App\Repositories;
 use App\Interface\MembershipInterface;
 use App\Models\Membership;
 use App\Models\User;
-
+use App\Models\UserRoles;
+use App\Models\RoleUsers;
 use Carbon\Carbon;
 
 class MembershipRepository implements MembershipInterface
 {
-    private $members, $users;
+    private $members, $users, $roles, $role_users;
 
     /**
      * Create a new class instance.
      */
-    public function __construct(Membership $membership, User $user)
+    public function __construct(Membership $membership, User $user, RoleUsers $userrole, UserRoles $role)
     {
         $this->members = $membership;
         $this->users = $user;
+        $this->roles = $role;
+        $this->role_users = $userrole;
     }
 
     public function getMemberships($perPage = 10)
@@ -31,7 +34,31 @@ class MembershipRepository implements MembershipInterface
         return $this->members->where('membership_id', $id)->first();
     }
 
-    // -=-------- This method will use only for "MEMBERS" --------------------------------
+    public function getMembershipNo($member_no)
+    {
+        $member = $this->members->where('membership_no', $member_no)->first();
+        // dd($member);
+        $memberResp = [];
+
+        $user = $this->users->where('membership_id', $member->membership_id)->first();
+        $role = $this->role_users->where('user_id', $user->user_id)->first();
+        $roles = $this->roles->where('role_id', $role->role_id)->first();
+
+        $memberResp = [
+            'membership_no' => $member->membership_no,
+            'member_name' => $user->name,
+            'email_address' => $user->email_address,
+            'birthdate' => $user->birthdate,
+            'user_status' => $user->user_status == 1 ? 'active' : 'inactive',
+            'contact_no' => $user->contact_no,
+            'role_name' => $roles->role_name,
+            'status' => $roles->status == 1 ? 'active' : 'inactive'
+        ];
+
+        return $memberResp;
+    }
+
+    // -=-------- This method will use only for "MEMBERS" that are existing in INTIMUS --------------------------------
     public function createMembership($data, $userData)
     {
         $member = $this->members->firstOrCreate(
@@ -40,8 +67,6 @@ class MembershipRepository implements MembershipInterface
                 'status' => $data['status']
             ]
         );
-
-        $member->save();
 
         $membershipId = $member->membership_id;
 
@@ -57,6 +82,8 @@ class MembershipRepository implements MembershipInterface
                 'user_status' => $userData['user_status']
             ]
         );
+
+        $user->user_roles()->attach(1, ['status' => 0]);
 
         // Return both User and Membership for reference
         return [

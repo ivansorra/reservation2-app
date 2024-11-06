@@ -4,14 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Services\UserServices;
+use App\Http\Requests\UserRequest;
+
 class UsersController extends Controller
 {
+    private $users;
+
+    public function __construct(UserServices $userService)
+    {
+        $this->users = $userService;
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        return $this->users->getUsersList($request);
     }
 
     /**
@@ -25,9 +34,9 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, UserRequest $userReq)
     {
-        //
+        return $this->users->createUser($request, $userReq);
     }
 
     /**
@@ -49,16 +58,16 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, UserRequest $userReq)
     {
-        //
+        return $this->users->updateUsers($request, $userReq);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        return $this->users->deleteUser($request);
     }
 }
