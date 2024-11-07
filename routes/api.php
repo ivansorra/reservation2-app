@@ -39,6 +39,14 @@ Route::prefix('reservations')->group(function() {
     Route::delete('/delete', [App\Http\Controllers\FlightReservationController::class, 'destroy']);
 });
 
+Route::prefix('emergency_details')->group(function (){
+    Route::get('/', [App\Http\Controllers\EmergencyDetailsController::class, 'index']);
+    Route::get('/show', [App\Http\Controllers\EmergencyDetailsController::class,'show']);
+    Route::post('/create', [App\Http\Controllers\EmergencyDetailsController::class, 'store']);
+    Route::put('/update', [App\Http\Controllers\EmergencyDetailsController::class, 'update']);
+    Route::delete('/delete', [App\Http\Controllers\EmergencyDetailsController::class, 'destroy']);
+});
+
 // Route::middleware(['auth:sanctum'])->group(function () {
 //     Route::prefix('v1')->group(function () {
 

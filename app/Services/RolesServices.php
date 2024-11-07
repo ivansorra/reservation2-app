@@ -4,13 +4,14 @@ namespace App\Services;
 
 use App\Repositories\RolesRepository;
 use App\Http\Requests\UserRolesRequest;
+use App\Traits\ResponseTraits;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 class RolesServices
 {
+    use ResponseTraits;
     private $rolesRepository;
-
     /**
      * Create a new class instance.
      */
@@ -60,6 +61,18 @@ class RolesServices
                'message' => $e->getMessage(),
                'server_response' => 'error'
             ]);
+        }
+    }
+
+    public function getRoleName(Request $request)
+    {
+        try {
+            $role_name = $request->get('role_name');
+            $get_role = $this->rolesRepository->getRoleByName($role_name);
+            return $this->successResponse($get_role, 'Successfully retrieved');
+        } catch (\Exception $e)
+        {
+            return $this->errorResponse($e, 'error');
         }
     }
 

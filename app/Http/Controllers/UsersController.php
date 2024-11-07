@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Services\UserServices;
+
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\EmergencyDetailsRequest;
+use App\Http\Requests\FlightReservationRequest;
 
 class UsersController extends Controller
 {
@@ -34,9 +37,9 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, UserRequest $userReq)
+    public function store(Request $request, UserRequest $userReq, EmergencyDetailsRequest $emergencyDetailsReq, FlightReservationRequest $reservationReq)
     {
-        return $this->users->createUser($request, $userReq);
+        return $this->users->createUser($request, $userReq, $emergencyDetailsReq, $reservationReq);
     }
 
     /**

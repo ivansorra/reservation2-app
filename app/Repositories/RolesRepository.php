@@ -24,6 +24,11 @@ class RolesRepository implements UserRolesInterface
         return $this->userrole->find($id);
     }
 
+    public function getRoleByName($name)
+    {
+        return $this->userrole->where('role_name', $name)->first();
+    }
+
     public function createRoles($roles)
     {
         return $this->userrole->create($roles);

@@ -43,7 +43,14 @@ class UserRolesController extends Controller
      */
     public function show(Request $request)
     {
-        return $this->userroles->getRoleById($request);
+        if($request->has('role_id'))
+        {
+           return $this->userroles->getRoleById($request);
+        }
+        elseif($request->has('role_name'))
+        {
+           return $this->userroles->getRoleName($request);
+        }
     }
 
     /**

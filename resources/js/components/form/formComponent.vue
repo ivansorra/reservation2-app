@@ -226,6 +226,7 @@
                                     id="waiver"
                                     class="form-check-input"
                                     @change="showWaiverModal"
+                                    required
                                 />
                                 <label for="waiver" class="form-check-label">
                                     I agree to the Release and Waiver of
@@ -359,6 +360,8 @@
 <script>
 import { onMounted, ref } from "vue";
 import * as bootstrap from "bootstrap";
+import { useRouter } from "vue-router";
+import axios from "axios";
 
 export default {
     setup() {
@@ -382,15 +385,17 @@ export default {
         const contactEmergencyAddress = ref("");
         const contactEmergencyRelationship = ref("");
 
-        const autoFillForm = () => {
-            const memberInfo = JSON.parse(sessionStorage.getItem('memberInfo'));
+        const router = useRouter();
 
-            if(memberInfo) {
-                emailAddress.value = memberInfo.email_address;
-                fullName.value = memberInfo.member_name;
-                contactNumber.value = memberInfo.contact_no;
-                birthDate.value = memberInfo.birthdate;
-                address.value = memberInfo.member_address;
+        const infoDetails = JSON.parse(sessionStorage.getItem('info'));
+
+        const autoFillForm = () => {
+            if(infoDetails) {
+                emailAddress.value = infoDetails.email_address;
+                fullName.value = infoDetails.member_name;
+                contactNumber.value = infoDetails.contact_no;
+                birthDate.value = infoDetails.birthdate;
+                address.value = infoDetails.member_address;
             }
         }
 
@@ -412,6 +417,69 @@ export default {
         };
 
         const submitForm = async () => {
+            const userData = {
+                membership_id: infoDetails ? infoDetails.membership_id : null,
+                name: fullName.value || null,
+                email_address: emailAddress.value || null,
+                address: address.value || null,
+                contact_no: contactNumber.value || null,
+                birthdate: birthDate.value || null,
+                user_status: 1,
+                arrival_date: travelStart.value || null,
+                return_date: travelEnd.value || null,
+                emergency_contact_name: contactEmergencyName.value || null,
+                emergency_contact_no: contactEmergencyNumber.value || null,
+                emergency_contact_address: contactEmergencyAddress.value || null,
+                relationship: contactEmergencyRelationship.value || null,
+            }
+
+            if (infoDetails) {
+                const userRole = infoDetails.role_name;
+
+                try {
+                    const response = await axios.get('http://localhost:8000/api/roles/show', {
+                        params: {
+                            role_name: userRole,
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        }
+                    });
+
+                    if (response.data && response.data.data) {
+                        if (Object.keys(response.data.data).length > 0) {
+                            userData['role_id'] = response.data.data.role_id;
+                            userData['user_role_status'] = response.data.data.status;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error fetching role:', error);
+                    alert('Error fetching role: ' + error.message);
+                    return;
+                }
+            }
+
+            try {
+                const userResponse = await axios.post('http://localhost:8000/api/users/create', userData, {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    }
+                });
+
+                if (userResponse.status === 200) {
+                    alert('User created successfully!');
+                    sessionStorage.removeItem('info');
+                    router.push('/login');
+                } else {
+                    console.error('Unexpected response:', userResponse);
+                    alert('Failed to create user. Please try again.');
+                }
+            } catch (err) {
+                console.error('Error submitting user data:', err);
+                alert('Error creating user: ' + err.message);
+            }
 
         }
 
@@ -429,12 +497,19 @@ export default {
             contactNumber,
             birthDate,
             address,
+            travelStart,
+            travelEnd,
+            contactEmergencyName,
+            contactEmergencyNumber,
+            contactEmergencyAddress,
+            contactEmergencyRelationship,
             showWaiverModal,
             acceptWaiver,
             closeModal,
             isAlternateChecked,
             altEmail,
-            autoFillForm
+            autoFillForm,
+            submitForm
         };
     },
 };

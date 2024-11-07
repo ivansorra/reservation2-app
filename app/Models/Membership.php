@@ -17,9 +17,15 @@ class Membership extends Model
         'status'
     ];
 
-    // public $timestamps = false;
+    // Define a one-to-many relationship to User
+    public function users()
+    {
+        return $this->hasMany(User::class, 'membership_id');
+    }
 
-    public function users(){
-        return $this->belongsToMany(User::class, 'member_user_pivot');
+    // Pagination method to fetch paginated users for this membership
+    public function getUserMembers($perPage = 10)
+    {
+        return $this->users()->paginate($perPage);
     }
 }

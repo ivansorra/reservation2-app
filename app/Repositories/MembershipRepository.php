@@ -40,22 +40,26 @@ class MembershipRepository implements MembershipInterface
         // dd($member);
         $memberResp = [];
 
-        $user = $this->users->where('membership_id', $member->membership_id)->first();
-        $role = $this->role_users->where('user_id', $user->user_id)->first();
-        $roles = $this->roles->where('role_id', $role->role_id)->first();
+        if($member)
+        {
+            $user = $this->users->where('membership_id', $member->membership_id)->first();
+            $role = $this->role_users->where('user_id', $user->user_id)->first();
+            $roles = $this->roles->where('role_id', $role->role_id)->first();
 
-        $memberResp = [
-            'user_id' => $user->user_id,
-            'membership_no' => $member->membership_no,
-            'member_name' => $user->name,
-            'member_address' => $user->address,
-            'email_address' => $user->email_address,
-            'birthdate' => $user->birthdate,
-            'user_status' => $user->user_status == 1 ? 'active' : 'inactive',
-            'contact_no' => $user->contact_no,
-            'role_name' => $roles->role_name,
-            'status' => $roles->status == 1 ? 'active' : 'inactive'
-        ];
+            $memberResp = [
+                'user_id' => $user->user_id,
+                'membership_id' => $member->membership_id,
+                'membership_no' => $member->membership_no,
+                'member_name' => $user->name,
+                'member_address' => $user->address,
+                'email_address' => $user->email_address,
+                'birthdate' => $user->birthdate,
+                'user_status' => $user->user_status == 1 ? 'active' : 'inactive',
+                'contact_no' => $user->contact_no,
+                'role_name' => $roles->role_name,
+                'status' => $roles->status == 1 ? 'active' : 'inactive'
+            ];
+        }
 
         return $memberResp;
     }

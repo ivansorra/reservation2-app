@@ -2,9 +2,7 @@
     <div class="row justify-content-md-center">
         <div class="card" style="width: 40rem; margin-top: 250px">
             <div class="card-body">
-                <p style="text-align: center; font-weight: bold">
-                    Welcome to Reservation App!
-                </p>
+                <img :src="imageUrl" class="rounded-t-lg" alt="Image description" />
                 <form @submit.prevent="reservationForm">
                     <div class="mb-3">
                         <select
@@ -15,7 +13,7 @@
                             name="user_type"
                         >
                             <option value="" disabled selected>
-                                Which type of user are you?
+                                Please Select
                             </option>
                             <option value="member">Member</option>
                             <option value="spouse">Spouse</option>
@@ -52,7 +50,7 @@
                         <label for="dependent">Primary Membership ID:</label>
                         <input
                             type="text"
-                            v-model="primaryMemberID"
+                            v-model="membership_no"
                             class="form-control"
                             id="dependent"
                             placeholder="Primary Member ID"
@@ -66,7 +64,7 @@
                         >
                         <input
                             type="text"
-                            v-model="sponsoringMemberID"
+                            v-model="membership_no"
                             class="form-control"
                             id="sponsoring"
                             placeholder="Sponsoring Member ID"
@@ -86,7 +84,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 
@@ -99,12 +97,11 @@ export default {
         const router = useRouter();
 
         const reservationForm = async () => {
-            // Prepare form data
+
             const formData = {
-                membership_no: membership_no.value || null,
+                membership_no: membership_no.value,
             };
 
-            // On this line will insert the api call in Intimus
             try {
                 const response = await axios.get('http://localhost:8000/api/members/show', {
                     params: formData,
@@ -115,22 +112,52 @@ export default {
                 });
 
                 if (response.data) {
+                    console.log("Response Data:", response.data);
                     if (response.data.data && Object.keys(response.data.data).length > 0) {
-                        // console.log(userType)
-                        if(userType.value === response.data.data.role_name)
-                        {
-                            sessionStorage.setItem('memberInfo', JSON.stringify(response.data.data));
+
+                        const userTypeVal = {};
+
+                        switch(userType.value) {
+                            case 'member':
+                                sessionStorage.setItem('info', JSON.stringify(response.data.data));
+                                break;
+                            case 'spouse':
+                                userTypeVal['role_name'] = userType.value;
+                                userTypeVal['membership_id'] = response.data.data.membership_id;
+                                sessionStorage.setItem('info', JSON.stringify(userTypeVal));
+                                break;
+                            case 'dependent':
+                                userTypeVal['role_name'] = userType.value;
+                                userTypeVal['membership_id'] = response.data.data.membership_id;
+                                sessionStorage.setItem('info', JSON.stringify(userTypeVal));
+                                break;
+                            case 'guest':
+                                userTypeVal['role_name'] = userType.value;
+                                userTypeVal['membership_id'] = response.data.data.membership_id;
+                                sessionStorage.setItem('info', JSON.stringify(userTypeVal));
+                                break;
+                            default:
+                                console.warn("Unknown userType value:", userType.value);
+                                break;
                         }
 
                         router.push("/reservation_form");
                     } else {
-                        console.log(response.data.message);
+                        alert("Membership ID does not exist");
                     }
                 }
-
             } catch (error) {
-                console.error("Error submitting form:", error);
+                if (error.response) {
+                    console.error("Error Response Data:", error.response.data);
+                    console.error("Error Response Status:", error.response.status);
+                    console.error("Error Response Headers:", error.response.headers);
+                } else if (error.request) {
+                    console.error("Error Request:", error.request);
+                } else {
+                    console.error("Error Message:", error.message);
+                }
             }
+
         };
 
         const updateUserType = () => {
@@ -140,6 +167,10 @@ export default {
             sponsoringMemberID.value = "";
         };
 
+        const imageUrl = computed(() => {
+            return `http://localhost:8000/public/storage/images/balesinbanner.jpg`;
+        });
+
         return {
             userType,
             membership_no,
@@ -147,6 +178,7 @@ export default {
             sponsoringMemberID,
             updateUserType,
             reservationForm,
+            imageUrl
         };
     },
 };
