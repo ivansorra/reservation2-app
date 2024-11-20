@@ -11,13 +11,14 @@ trait ResponseTraits
      * @param string $message
      * @return \Illuminate\Http\JsonResponse
      */
-    public function successResponse($data, $message = '')
+
+    public static function successResponse($data, $message = '', $status)
     {
         return response()->json([
             'success' => true,
             'message' => $message,
             'data' => $data
-        ], 200);
+        ], $status);
     }
 
     /**
@@ -27,7 +28,7 @@ trait ResponseTraits
      * @param string $message
      * @return \Illuminate\Http\JsonResponse
      */
-    public function errorResponse($e, $message = '')
+    public static function errorResponse($e, $message = '')
     {
         return response()->json([
             'success' => false,
