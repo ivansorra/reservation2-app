@@ -2,7 +2,7 @@
     <div class="row justify-content-md-center">
         <div class="card" style="width: 40rem; margin-top: 250px">
             <div class="card-body">
-                <img :src="imageUrl" class="rounded-t-lg" alt="Image description" />
+                <img v-bind:src="'images/balesinbanner.jpg'" class="rounded-t-lg" alt="Image description" />
                 <form @submit.prevent="reservationForm">
                     <div class="mb-3">
                         <select
@@ -167,9 +167,9 @@ export default {
             sponsoringMemberID.value = "";
         };
 
-        const imageUrl = computed(() => {
-            return `http://localhost:8000/public/storage/images/balesinbanner.jpg`;
-        });
+        // const imageUrl = computed(() => {
+        //     return `http://localhost:8000/public/storage/images/balesinbanner.jpg`;
+        // });
 
         return {
             userType,
@@ -178,7 +178,7 @@ export default {
             sponsoringMemberID,
             updateUserType,
             reservationForm,
-            imageUrl
+            // imageUrl
         };
     },
 };

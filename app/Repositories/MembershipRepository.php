@@ -82,10 +82,10 @@ class MembershipRepository implements MembershipInterface
             ],
             [
                 'name' => $userData['name'],
-                'address' => $userData['address'],
-                'email_address' => $userData['email_address'],
-                'birthdate' => Carbon::parse($userData['birthdate'])->format('Y-m-d'),
-                'contact_no' => $userData['contact_no'],
+                'address' => $userData['address'] ?? null,
+                'email_address' => $userData['email_address'] ?? null,
+                'birthdate' => Carbon::parse($userData['birthdate'])->format('Y-m-d') ?? null,
+                'contact_no' => $userData['contact_no'] ?? null,
                 'user_status' => $userData['user_status']
             ]
         );

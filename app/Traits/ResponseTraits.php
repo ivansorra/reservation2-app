@@ -28,13 +28,13 @@ trait ResponseTraits
      * @param string $message
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function errorResponse($e, $message = '')
+    public static function errorResponse($e, $message = '', $status)
     {
         return response()->json([
             'success' => false,
             'message' => $message,
             'server_response' => 'error',
             'error' => $e->getMessage()
-        ], 500);
+        ], $status);
     }
 }

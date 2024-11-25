@@ -28,8 +28,14 @@ class UserRepository implements UsersInterface
         return $this->users->where('user_id', $id)->first();
     }
 
+    public function getMemberUserId($id)
+    {
+        return $this->users->where('membership_id', $id)->first();
+    }
+
     public function addUser($data)
     {
+
         $user = $this->users->firstOrCreate([
             'membership_id' => $data['membership_id'],
             'name' => $data['name'],

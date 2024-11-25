@@ -11,18 +11,20 @@ body {
     border: 1px solid #ccc; /* Border around the section */
     border-radius: 10px; /* Rounded corners */
     position: relative;
-    margin-bottom: 10px;
-
+    margin-bottom: 20px; /* Space between sections */
+    background-color: #f9f9f9; /* Light background to highlight the section */
 }
 
 .divider span {
     position: absolute;
-    top: -10px; /* Adjusts the position of the label */
-    left: 20px; /* Aligns the span to the left */
-    background-color: white; /* To match the background of the container */
-    padding: 0 10px;
-    color: #888;
-    font-weight: bold;
-    font-size: 0.9rem;
-    border-radius: 5px; /* Gives the span rounded corners */
+    top: -12px; /* Slightly above the border */
+    left: 20px; /* Consistent margin from the left */
+    background-color: #f9f9f9; /* Matches the container background */
+    padding: 0 10px; /* Space around the text */
+    color: #555; /* Subtle text color */
+    font-weight: bold; /* Emphasized text */
+    font-size: 0.9rem; /* Moderate size for readability */
+    border: 1px solid #ccc; /* Matches divider border */
+    border-radius: 5px; /* Rounded corners for the label */
 }
+

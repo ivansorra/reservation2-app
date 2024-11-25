@@ -69,10 +69,10 @@ class RolesServices
         try {
             $role_name = $request->get('role_name');
             $get_role = $this->rolesRepository->getRoleByName($role_name);
-            return $this->successResponse($get_role, 'Successfully retrieved');
+            return $this->successResponse($get_role, 'Successfully retrieved role', 200);
         } catch (\Exception $e)
         {
-            return $this->errorResponse($e, 'error');
+            return $this->errorResponse($e, 'Error retrieving role', 400);
         }
     }
 

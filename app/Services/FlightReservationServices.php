@@ -37,9 +37,9 @@ class FlightReservationServices
 
             $reservations = $this->reservation->getReservations($limit);
 
-            return $this->successResponse($reservations, 'Success');
+            return $this->successResponse($reservations, 'Successfully retrieved all reservations', 200);
         } catch (\Exception $e) {
-            return $this->errorResponse($e, 'Error');
+            return $this->errorResponse($e, 'Error', 400);
         }
     }
 
@@ -50,9 +50,9 @@ class FlightReservationServices
 
             $get_reservations = $this->reservation->getReservation($reservation_id);
 
-            return $this->successResponse($get_reservations, 'Success');
+            return $this->successResponse($get_reservations, 'Successfully retrieved reservation', 200);
         } catch (\Exception $e) {
-            return $this->errorResponse($e, 'Error');
+            return $this->errorResponse($e, 'Error', 400);
         }
     }
 
@@ -68,9 +68,9 @@ class FlightReservationServices
 
             $new_reservation = $this->reservation->createReservation($validatedData);
 
-            return $this->successResponse($new_reservation, 'Success');
+            return $this->successResponse($new_reservation, 'Successfully created new reservation', 200);
         } catch (\Exception $e) {
-            return $this->errorResponse($e, 'Error');
+            return $this->errorResponse($e, 'Error', 400);
         }
     }
 
@@ -87,9 +87,9 @@ class FlightReservationServices
 
             $updated_reservation = $this->reservation->updateReservation($reservation_id, $validatedData);
 
-            return $this->successResponse($updated_reservation, 'Success');
+            return $this->successResponse($updated_reservation, 'Successfully updated the reservation', 200);
         } catch (\Exception $e) {
-            return $this->errorResponse($e, 'Error');
+            return $this->errorResponse($e, 'Error', 400);
         }
     }
 
@@ -99,9 +99,9 @@ class FlightReservationServices
 
             $delete_reservation = $this->reservation->deleteReservation($reservation_id);
 
-            return $this->successResponse($delete_reservation, 'Success');
+            return $this->successResponse($delete_reservation, 'Successfully deleted reservation', 200);
         } catch (\Exception $e) {
-            return $this->errorResponse($e, 'Error');
+            return $this->errorResponse($e, 'Error removing reservation', 400);
         }
     }
 }
