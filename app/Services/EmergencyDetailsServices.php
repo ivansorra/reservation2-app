@@ -36,9 +36,9 @@ class EmergencyDetailsServices
             $limit = $request->get('limit') ?? 10;
             $emergencyDetails = $this->emergencyDetailRepo->getEmergencyDetails($limit);
 
-            return $this->successResponse($emergencyDetails, 'Success');
+            return $this->successResponse($emergencyDetails, 'Success', 200);
         } catch (\Exception $e) {
-            return $this->errorResponse($e, 'Error');
+            return $this->errorResponse($e, 'Error', 400);
         }
     }
 
@@ -49,9 +49,9 @@ class EmergencyDetailsServices
 
             $emergencyDetail = $this->emergencyDetailRepo->getEmergencyDetail($emergency_detail_id);
 
-            return $this->successResponse($emergencyDetail, 'Success');
+            return $this->successResponse($emergencyDetail, 'Success', 200);
         } catch (\Exception $e) {
-            return $this->errorResponse($e, 'Error');
+            return $this->errorResponse($e, 'Error', 400);
         }
     }
 
@@ -69,9 +69,9 @@ class EmergencyDetailsServices
 
             $create_emergency_detail = $this->emergencyDetailRepo->createEmergencyDetail($validatedData);
 
-            return $this->successResponse($create_emergency_detail, "Successfully created emergency detail");
+            return $this->successResponse($create_emergency_detail, "Successfully created emergency detail", 200);
         } catch (\Exception $e) {
-            return $this->errorResponse($e, 'Error');
+            return $this->errorResponse($e, 'Error', 400);
         }
     }
 
@@ -89,9 +89,9 @@ class EmergencyDetailsServices
 
             $updated_reservation = $this->emergencyDetailRepo->updateEmergencyDetail($detail_id, $validatedData);
 
-            return $this->successResponse($updated_reservation, 'Success');
+            return $this->successResponse($updated_reservation, 'Success', 200);
         } catch (\Exception $e) {
-            return $this->errorResponse($e, 'Error');
+            return $this->errorResponse($e, 'Error', 400);
         }
     }
 
@@ -102,7 +102,7 @@ class EmergencyDetailsServices
 
             $delete_emergency_detail = $this->emergencyDetailRepo->deleteEmergencyDetail($detail_id);
         } catch (\Exception $e) {
-            return $this->errorResponse($e, 'Error');
+            return $this->errorResponse($e, 'Error', 400);
         }
     }
 }

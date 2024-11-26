@@ -90,7 +90,14 @@ class MembershipRepository implements MembershipInterface
             ]
         );
 
-        $user->user_roles()->attach(1, ['status' => 0]);
+        if($data['mem_type'] === "member")
+        {
+            $user->user_roles()->attach(1, ['status' => 0]);
+        }
+        else if($data['mem_type'] === "spouse")
+        {
+            $user->user_roles()->attach(2, ['status' => 0]);
+        }
 
         // Return both User and Membership for reference
         return [

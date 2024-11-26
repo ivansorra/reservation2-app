@@ -22,7 +22,9 @@
     "dependencies": {
         "flowbite": "^2.5.2",
         "qrcode": "^1.5.4",
+        "sweetalert2": "^11.14.5",
         "vue-qrcode-reader": "^5.5.11",
-        "vue-router": "^4.4.5"
+        "vue-router": "^4.4.5",
+        "vue-tailwind-datepicker": "^1.7.3"
     }
 }

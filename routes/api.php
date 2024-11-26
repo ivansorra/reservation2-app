@@ -47,6 +47,14 @@ Route::prefix('emergency_details')->group(function (){
     Route::delete('/delete', [App\Http\Controllers\EmergencyDetailsController::class, 'destroy']);
 });
 
+Route::prefix('qr')->group(function () {
+    Route::get('/', [App\Http\Controllers\QrCodeController::class, 'index']);
+    Route::get('/show', [App\Http\Controllers\QrCodeController::class,'show']);
+    Route::post('/create', [App\Http\Controllers\QrCodeController::class,'store']);
+    Route::put('/update', [App\Http\Controllers\QrCodeController::class, 'update']);
+    Route::delete('/delete', [App\Http\Controllers\QrCodeController::class, 'destroy']);
+});
+
 // Route::middleware(['auth:sanctum'])->group(function () {
 //     Route::prefix('v1')->group(function () {
 

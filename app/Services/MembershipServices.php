@@ -57,18 +57,20 @@ class MembershipServices
             if ($get_member_id) {
                 $membersValidatedData = [
                     'membership_no' => $get_member_id['member_number'] ?? null,
+                    'mem_type' => $request->get('mem_type'),
                     'status' => true,
                 ];
 
                 $usersValidatedData = [
                     'name' => $get_member_id['member_name'] ?? null,
                     'address' => "123 Sample St",
-                    'email_address' => 'issorra@alphaland.com.ph',
+                    'email_address' => 'samples@alphaland.com.ph',
                     'birthdate' => Carbon::parse('01/11/1998')->format('Y-m-d'),
                     'contact_no' => "09120429426",
                     'user_status' => true,
                 ];
 
+                // dd($membersValidatedData);
                 $getExistingMember = $this->membershipRepository->getMembershipNo($get_member_id['member_number']);
 
                 if ($getExistingMember) {

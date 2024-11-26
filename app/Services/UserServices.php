@@ -2,34 +2,55 @@
 
 namespace App\Services;
 
+// --------------- Requests -----------------------
+use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\FlightReservationRequest;
 use App\Http\Requests\EmergencyDetailsRequest;
+// ------------------------------------------------
 
+// ------------------ Repositories ----------------
 use App\Repositories\UserRepository;
 use App\Repositories\MembershipRepository;
 use App\Repositories\FlightReservationRepository;
 use App\Repositories\EmergencyDetailsRepositories;
+use App\Repositories\RolesRepository;
+use App\Repositories\QrCodeRepository;
+// ------------------------------------------------
 
-use Illuminate\Http\Request;
+// ------------------ Mailers ------------------------
+use Illuminate\Support\Facades\Mail;
+use App\Mail\QrSendMail;
+
+// ------------------- JSON Response ------------------
 use Illuminate\Http\JsonResponse;
-
 use App\Traits\ResponseTraits;
+// ----------------------------------------------------
+
+// ------------------- Storage ----------------------
+use Illuminate\Support\Facades\Storage;
+// --------------------------------------------------
+
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
+use Carbon\Carbon;
 
 class UserServices
 {
     use ResponseTraits;
 
-    private $userRepository, $members, $reservation, $emergency_details;
+    private $userRepository, $members, $reservation, $emergency_details, $qr_code, $rolesRepo;
     /**
      * Create a new class instance.
      */
-    public function __construct(UserRepository $userRepo, MembershipRepository $memberRepository, FlightReservationRepository $flightReservationRepository, EmergencyDetailsRepositories $emergencyRepository)
+    public function __construct(UserRepository $userRepo, MembershipRepository $memberRepository, FlightReservationRepository $flightReservationRepository, EmergencyDetailsRepositories $emergencyRepository, QrCodeRepository $qrCodeRepository, RolesRepository $roleRepository)
     {
         $this->userRepository = $userRepo;
         $this->members = $memberRepository;
         $this->reservation = $flightReservationRepository;
         $this->emergency_details = $emergencyRepository;
+        $this->rolesRepo = $roleRepository;
+        $this->qr_code = $qrCodeRepository;
     }
 
     public function getUsersList(Request $request)
@@ -58,95 +79,128 @@ class UserServices
         }
     }
 
-    public function createUser(Request $request, UserRequest $userReq, EmergencyDetailsRequest $emergencyDetailsRequest, FlightReservationRequest $reservationRequest)
-    {
+    public function createUser(
+        Request $request,
+        UserRequest $userReq,
+        EmergencyDetailsRequest $emergencyDetailsRequest,
+        FlightReservationRequest $reservationRequest
+    ) {
         try {
+            // Validate UserRequest
             $userValidator = $userReq->authorize($request);
-
-            if($userValidator instanceof JsonResponse)
-            {
+            if ($userValidator instanceof JsonResponse) {
                 return $userValidator;
             }
 
+            // Validate FlightReservationRequest
             $reservationValidator = $reservationRequest->authorize($request);
-
-            if($reservationValidator instanceof JsonResponse)
-            {
+            if ($reservationValidator instanceof JsonResponse) {
                 return $reservationValidator;
             }
 
+            // Validate EmergencyDetailsRequest
             $emergencyDetailsValidator = $emergencyDetailsRequest->authorize($request);
-
-            if($emergencyDetailsValidator instanceof JsonResponse)
-            {
+            if ($emergencyDetailsValidator instanceof JsonResponse) {
                 return $emergencyDetailsValidator;
             }
 
+            // Extract validated data
             $userValidatedData = $userValidator->validated();
             $reservationValidatedData = $reservationValidator->validated();
             $emergencyDetailsValidatedData = $emergencyDetailsValidator->validated();
 
+            // Add role data
             $userValidatedData['role_id'] = $request->get('role_id');
             $userValidatedData['user_role_status'] = $request->get('user_role_status');
 
-            if (!empty($request->get('membership_id'))) {
-                $userValidatedData['membership_id'] = $request->get('membership_id');
+            $role_data = $this->rolesRepo->getRole($request->get('role_id'));
 
-                try {
-                    // Check if the user with the given membership_id exists
-                    $getExistingUserMember = $this->userRepository->getMemberUserId($userValidatedData['membership_id']);
+            // Check if Membership ID exists
+            $membershipId = $request->get('membership_id');
 
-                    if ($getExistingUserMember) {
-                        $reservationValidatedData['user_id'] = $getExistingUserMember->id;
-                        $emergencyDetailsValidatedData['user_id'] = $getExistingUserMember->id;
-                        $create_user = $getExistingUserMember;
-                    } else {
-                        $create_user = $this->userRepository->addUser($userValidatedData);
-
-                        if (!$create_user || !$create_user->id) {
-                            return response()->json([
-                                'error' => 'Failed to create user',
-                                'details' => 'User creation returned an invalid response or missing ID',
-                            ], 400);
-                        }
-
-                        $reservationValidatedData['user_id'] = $create_user->id;
-                        $emergencyDetailsValidatedData['user_id'] = $create_user->id;
-                    }
-
-                    // Create reservation
-                    $create_reservation = $this->reservation->createReservation($reservationValidatedData);
-                    if (!$create_reservation) {
-                        return response()->json([
-                            'error' => 'Failed to create reservation',
-                        ], 400);
-                    }
-
-                    // Create emergency contact details
-                    $create_contact_emergency = $this->emergency_details->createEmergencyDetail($emergencyDetailsValidatedData);
-                    if (!$create_contact_emergency) {
-                        return response()->json([
-                            'error' => 'Failed to create emergency details',
-                        ], 400);
-                    }
-
-                    return $this->successResponse([
-                        'user' => $create_user,
-                        'reservation' => $create_reservation,
-                        'emergency_details' => $create_contact_emergency,
-                    ], 'Successfully created user, reservation, and emergency details', 200);
-                } catch (\Exception $e) {
-                    return response()->json([
-                        'error' => 'An unexpected error occurred',
-                        'details' => $e->getMessage(),
-                    ], 500);
-                }
-            } else {
+            if (empty($membershipId)) {
                 return response()->json([
-                    'error' => 'Membership ID is required',
-                    'details' => 'Membership ID does not exist in the request',
-                ], 400);
+                    'success' => false,
+                    'messaage' => 'Membership ID does not exist',
+                400]);
             }
+
+            $userValidatedData['membership_id'] = $membershipId;
+
+            $user_id = null;
+
+            $memberExists = $this->userRepository->getMemberUserId($membershipId);
+            if (!$memberExists) {
+                $create_user = $this->userRepository->addUser($userValidatedData);
+
+                if (!$create_user || !$create_user->user_id) {
+                    return response()->json(['error' => 'Failed to create user or fetch user ID'], 500);
+                }
+
+                $user_id = $create_user->id;
+            } else {
+                $create_user = $memberExists;
+                $user_id = $create_user->user_id;
+            }
+
+            $reservationValidatedData['user_id'] = $user_id;
+            $emergencyDetailsValidatedData['user_id'] = $user_id;
+
+            $create_reservation = $this->reservation->createReservation($reservationValidatedData);
+            $create_contact_emergency = $this->emergency_details->createEmergencyDetail($emergencyDetailsValidatedData);
+
+            // Serialize the QR content into a JSON string
+            $qr_content = json_encode([
+                'name' => $create_user->name,
+                'role' => $userValidatedData['role_id'],
+                'email_address' => $create_user->email_address,
+                'birthdate' => $create_user->birthdate,
+                'contact_no' => $create_user->contact_no,
+                'user_status' => $create_user->user_status == 1 ? 'active' : 'inactive',
+            ]);
+
+            $qr_code_data = [
+                'user_id' => $user_id,
+                'travel_id' => $create_reservation->travel_id,
+                'qr_content' => $qr_content, // Use the serialized content
+                'qr_expiration_start' => $reservationValidatedData['arrival_date'],
+                'qr_expiration_end' => $reservationValidatedData['return_date'],
+                'is_active' => true,
+            ];
+
+            $create_qr = $this->qr_code->generateQrCode($qr_code_data);
+
+            // Generate the QR code
+            $qrCode = QrCode::format('png')->size(200)->generate($qr_content); // Pass the stringified content
+
+            // Prepare QR code file path
+            $duration = isset($reservationValidatedData['return_date'])
+                ? Carbon::parse($reservationValidatedData['arrival_date'])->toFormattedDateString().' to '.Carbon::parse($reservationValidatedData['return_date'])->toFormattedDateString()
+                : Carbon::parse($reservationValidatedData['arrival_date'])->toFormattedDateString();
+
+            $qrPath = '/qr_codes/'.$create_user->name.'-'.$duration.'.png';
+
+            // Store the QR code
+            Storage::disk('public')->put($qrPath, $qrCode);
+
+            // Generate the URL for the QR code
+            $qrCodeUrl = Storage::disk('public')->url($qrPath);
+
+            // Send email with the QR code
+            Mail::to($create_user->email_address)->send(new QrSendMail(
+                $role_data['role_name'],
+                $create_user->name,
+                $create_reservation->arrival_date,
+                $create_reservation->return_date,
+                $create_qr->qr_id,
+                $qrCodeUrl
+            ));
+
+            return $this->successResponse([
+                'user' => $create_user,
+                'reservation' => $create_reservation,
+                'emergency_details' => $create_contact_emergency,
+            ], 'Successfully created user', 200);
         } catch (\Exception $e) {
             return $this->errorResponse($e, 'Error', 400);
         }

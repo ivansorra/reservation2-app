@@ -29,7 +29,7 @@
                             v-model="membership_no"
                             class="form-control"
                             id="member"
-                            placeholder="Membership ID"
+                            placeholder="Enter Membership ID"
                             required
                         />
                     </div>
@@ -41,7 +41,7 @@
                             v-model="membership_no"
                             class="form-control"
                             id="member"
-                            placeholder="Primary Membership ID"
+                            placeholder="Enter Membership ID"
                             required
                         />
                     </div>
@@ -53,7 +53,7 @@
                             v-model="membership_no"
                             class="form-control"
                             id="dependent"
-                            placeholder="Primary Member ID"
+                            placeholder="Enter Primary Member ID"
                             required
                         />
                     </div>
@@ -67,7 +67,7 @@
                             v-model="membership_no"
                             class="form-control"
                             id="sponsoring"
-                            placeholder="Sponsoring Member ID"
+                            placeholder="Enter Sponsoring Member ID"
                             required
                         />
                     </div>
@@ -97,9 +97,9 @@ export default {
         const router = useRouter();
 
         const reservationForm = async () => {
-
             const formData = {
                 membership_no: membership_no.value,
+                mem_type: userType.value
             };
 
             try {
@@ -122,9 +122,9 @@ export default {
                                 sessionStorage.setItem('info', JSON.stringify(response.data.data));
                                 break;
                             case 'spouse':
-                                userTypeVal['role_name'] = userType.value;
-                                userTypeVal['membership_id'] = response.data.data.membership_id;
-                                sessionStorage.setItem('info', JSON.stringify(userTypeVal));
+                                // userTypeVal['role_name'] = userType.value;
+                                // userTypeVal['membership_id'] = response.data.data.membership_id;
+                                sessionStorage.setItem('info', JSON.stringify(response.data.data));
                                 break;
                             case 'dependent':
                                 userTypeVal['role_name'] = userType.value;
