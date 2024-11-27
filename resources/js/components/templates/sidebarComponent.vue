@@ -2,24 +2,16 @@
     <div class="flex h-screen bg-gray-100">
         <!-- Sidebar -->
         <div class="w-64 bg-white border-r">
-            <div class="p-4 font-bold">Sidebar</div>
+            <div class="p-4 font-bold">Qr Code Reservation Admin</div>
             <ul class="list-none">
-                <router-link to="/admin/membership" class="block p-2 text-gray-700 hover:bg-gray-200">
-                    Membership
-                </router-link>
-                <router-link
-                    to="/about"
-                    class="block p-2 text-gray-700 hover:bg-gray-200"
-                >Reservations</router-link>
-
                 <li class="relative">
                     <button
-                        @click="toggleDropdown"
+                        @click="toggleMembersDropdown"
                         class="flex justify-between items-center w-full p-2 text-left text-gray-700 hover:bg-gray-200 focus:outline-none"
                     >
-                        Services
+                        Membership
                         <svg
-                            :class="dropdownOpen ? 'transform rotate-180' : ''"
+                            :class="membershipdropdownOpen ? 'transform rotate-180' : ''"
                             class="w-4 h-4 transition-transform duration-200"
                             fill="none"
                             stroke="currentColor"
@@ -35,21 +27,54 @@
                         </svg>
                     </button>
                     <ul
-                        v-if="dropdownOpen"
+                        v-if="membershipdropdownOpen"
                         class="bg-gray-100 border-l border-b border-r mt-1"
                     >
                         <router-link
-                            to="/services/service1"
+                            to="/admin/membership"
                             class="block p-2 text-gray-700 hover:bg-gray-200"
-                        >Service 1</router-link>
+                        >Manage Members</router-link>
+                        <router-link
+                            to="/admin/roles"
+                            class="block p-2 text-gray-700 hover:bg-gray-200"
+                        >Manage Roles</router-link>
+                    </ul>
+                </li>
+
+                <li class="relative">
+                    <button
+                        @click="toggleReservationsDropdown"
+                        class="flex justify-between items-center w-full p-2 text-left text-gray-700 hover:bg-gray-200 focus:outline-none"
+                    >
+                        Reservations
+                        <svg
+                            :class="reservationDropdownOpen ? 'transform rotate-180' : ''"
+                            class="w-4 h-4 transition-transform duration-200"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M7 10l5 5 5-5H7z"
+                            />
+                        </svg>
+                    </button>
+                    <ul
+                        v-if="reservationDropdownOpen"
+                        class="bg-gray-100 border-l border-b border-r mt-1"
+                    >
+                        <router-link
+                            to="/admin/membership"
+                            class="block p-2 text-gray-700 hover:bg-gray-200"
+                        >Manage Reservations</router-link>
                         <router-link
                             to="/services/service2"
                             class="block p-2 text-gray-700 hover:bg-gray-200"
-                        >Service 2</router-link>
-                        <router-link
-                            to="/services/service3"
-                            class="block p-2 text-gray-700 hover:bg-gray-200"
-                        >Service 3</router-link>
+                        >Manage Activity</router-link>
                     </ul>
                 </li>
 
@@ -83,12 +108,16 @@ export default {
     name: "sidebarComponent",
     data() {
         return {
-            dropdownOpen: false,
+            membershipdropdownOpen: false,
+            reservationDropdownOpen: false,
         };
     },
     methods: {
-        toggleDropdown() {
-            this.dropdownOpen = !this.dropdownOpen;
+        toggleMembersDropdown() {
+            this.membershipdropdownOpen = !this.membershipdropdownOpen;
+        },
+        toggleReservationsDropdown() {
+            this.reservationDropdownOpen = !this.reservationDropdownOpen;
         },
         logout() {
             console.log("Logging out...");

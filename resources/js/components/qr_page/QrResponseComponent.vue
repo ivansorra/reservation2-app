@@ -5,7 +5,7 @@
                 Tracking System
             </h1>
             <form @submit.prevent="submitForm">
-                <div class="col-md-11 mb-3">
+                <div class="col-md-12 mb-3">
                     <label for="fullName" class="form-label"
                         >Full Name</label
                     >
@@ -25,7 +25,7 @@
                     />
                 </div>
 
-                <div class="col-md-11 mb-3">
+                <div class="col-md-12 mb-3">
                     <label for="emailAddress" class="form-label"
                         >Email Address:</label
                     >
@@ -45,7 +45,7 @@
                     />
                 </div>
 
-                <div class="col-md-11 mb-3">
+                <div class="col-md-12 mb-3">
                     <label for="contactNumber" class="form-label"
                         >Activity:</label
                     >
@@ -62,7 +62,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-11 mb-3">
+                <div class="col-md-12 mb-3">
                     <label for="address" class="form-label">Arrival Date:</label>
                     <input
                         type="text"
@@ -74,7 +74,7 @@
                     />
                 </div>
 
-                <div class="col-md-11 mb-3">
+                <div class="col-md-12 mb-3">
                     <label for="contactNumber" class="form-label"
                         >Location:</label
                     >

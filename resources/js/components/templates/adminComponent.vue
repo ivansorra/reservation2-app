@@ -8,7 +8,6 @@
 
 <script>
 import sidebarComponent from './SideBarComponent.vue';
-import membershipForm from '../admin/membershipForm.vue';
 
 export default {
   name: 'adminComponent',

@@ -2,10 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Login from './components/login/loginComponent.vue';
 import Form from './components/form/formComponent.vue';
 import QrCodeScanner from './components/scanner/QrScannerComponent.vue';
+import QrResponseComponent from './components/qr_page/QrResponseComponent.vue';
+
+// ------------------- Admin Components --------------------------------------
 import adminComponent from './components/templates/adminComponent.vue';
 import membershipForm from './components/admin/membershipForm.vue';
 import indexComponent from './components/admin/members/indexComponent.vue';
-import QrResponseComponent from './components/qr_page/QrResponseComponent.vue';
+import rolesComponent from './components/admin/user_roles/rolesComponent.vue';
+// ---------------------------------------------------------------------------
 
 const routes = [
   {
@@ -45,6 +49,11 @@ const routes = [
             path: 'membership',
             name: 'membership',
             component: membershipForm
+        },
+        {
+            path: 'roles',
+            name: 'roles',
+            component: rolesComponent
         }
     ]
   }
