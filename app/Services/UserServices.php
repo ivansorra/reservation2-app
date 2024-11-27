@@ -178,13 +178,10 @@ class UserServices
                 ? Carbon::parse($reservationValidatedData['arrival_date'])->toFormattedDateString().' to '.Carbon::parse($reservationValidatedData['return_date'])->toFormattedDateString()
                 : Carbon::parse($reservationValidatedData['arrival_date'])->toFormattedDateString();
 
-            $qrPath = '/qr_codes/'.$create_user->name.'-'.$duration.'.png';
-
-            // Store the QR code
-            Storage::disk('public')->put($qrPath, $qrCode);
-
-            // Generate the URL for the QR code
-            $qrCodeUrl = Storage::disk('public')->url($qrPath);
+            $qrPath = 'qr_codes/' . $create_user->name . '-' . $duration . '.png';
+            $qrFullPath = public_path($qrPath);
+            file_put_contents($qrFullPath, $qrCode);
+            $qrCodeUrl = asset($qrPath);
 
             // Send email with the QR code
             Mail::to($create_user->email_address)->send(new QrSendMail(

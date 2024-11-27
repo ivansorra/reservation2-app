@@ -5,10 +5,11 @@ import QrCodeScanner from './components/scanner/QrScannerComponent.vue';
 import adminComponent from './components/templates/adminComponent.vue';
 import membershipForm from './components/admin/membershipForm.vue';
 import indexComponent from './components/admin/members/indexComponent.vue';
+import QrResponseComponent from './components/qr_page/QrResponseComponent.vue';
 
 const routes = [
   {
-    path: '/login',
+    path: '/index',
     name: 'login',
     component: Login,
   },
@@ -16,6 +17,12 @@ const routes = [
     path: '/reservation_form',
     name: 'form',
     component: Form,
+    // meta: { requiresAuth: true }
+  },
+  {
+    path: '/qr_response',
+    name: 'qr_response',
+    component: QrResponseComponent
     // meta: { requiresAuth: true }
   },
   {
