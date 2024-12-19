@@ -33,6 +33,7 @@ trait ResponseTraits
         return response()->json([
             'success' => false,
             'message' => $message,
+            'line_error' => $e->getLine(),
             'server_response' => 'error',
             'error' => $e->getMessage()
         ], $status);

@@ -35,6 +35,13 @@ trait APIRequestTrait
                     "member_name" => $json_response['memberName'],
                     "member_type" => $json_response['memType'],
                     "activation_date" => $json_response['ActivDt'],
+                    "member_email" => $json_response['email'],
+                    "address" => $json_response['address'][0],
+                    "phone_number" => $json_response['phones'][0],
+                    "birthday" => $json_response['birthDate'],
+                    "confirmation_no" => $json_response['nextConfNo'],
+                    "arrival_date" => $json_response['nextArrDt'],
+                    "relation" => $json_response['relation']
                 ];
 
                 return $results;

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Interface\MembershipInterface;
+use App\Models\FlightReservation;
 use App\Models\Membership;
 use App\Models\User;
 use App\Models\UserRoles;
@@ -11,17 +12,18 @@ use Carbon\Carbon;
 
 class MembershipRepository implements MembershipInterface
 {
-    private $members, $users, $roles, $role_users;
+    private $members, $users, $roles, $role_users, $reservations;
 
     /**
      * Create a new class instance.
      */
-    public function __construct(Membership $membership, User $user, RoleUsers $userrole, UserRoles $role)
+    public function __construct(Membership $membership, User $user, RoleUsers $userrole, UserRoles $role, FlightReservation $reservation)
     {
         $this->members = $membership;
         $this->users = $user;
         $this->roles = $role;
         $this->role_users = $userrole;
+        $this->reservations = $reservation;
     }
 
     public function getMemberships($perPage = 10)
@@ -34,38 +36,56 @@ class MembershipRepository implements MembershipInterface
         return $this->members->where('membership_id', $id)->first();
     }
 
-    public function getMembershipNo($member_no)
+    public function getMembershipNo($member_no, $travel_id = null)
     {
-        $member = $this->members->where('membership_no', $member_no)->first();
-        // dd($member);
         $memberResp = [];
 
-        if($member)
-        {
-            $user = $this->users->where('membership_id', $member->membership_id)->first();
-            $role = $this->role_users->where('user_id', $user->user_id)->first();
-            $roles = $this->roles->where('role_id', $role->role_id)->first();
+        $member = $this->members->where('membership_no', $member_no)->first();
+        if (!$member) {
+            return $memberResp;
+        }
 
-            $memberResp = [
-                'user_id' => $user->user_id,
-                'membership_id' => $member->membership_id,
-                'membership_no' => $member->membership_no,
-                'member_name' => $user->name,
-                'member_address' => $user->address,
-                'email_address' => $user->email_address,
-                'birthdate' => $user->birthdate,
-                'user_status' => $user->user_status == 1 ? 'active' : 'inactive',
-                'contact_no' => $user->contact_no,
-                'role_name' => $roles->role_name,
-                'status' => $roles->status == 1 ? 'active' : 'inactive'
-            ];
+        // Fetch related user data
+        $user = $this->users->where('membership_id', $member->membership_id)->first();
+        if (!$user) {
+            return $memberResp;
+        }
+
+        $role = $this->role_users->where('user_id', $user->user_id)->first();
+        $roles = $role ? $this->roles->where('role_id', $role->role_id)->first() : null;
+
+        $memberResp = [
+            'user_id' => $user->user_id ?? null,
+            'membership_id' => $member->membership_id,
+            'membership_no' => $member->membership_no,
+            'member_name' => $user->name ?? '',
+            'member_address' => $user->address ?? '',
+            'email_address' => $user->email_address ?? '',
+            'birthdate' => $user->birthdate ?? '',
+            'user_status' => $user->user_status == 1 ? 'active' : 'inactive',
+            'contact_no' => $user->contact_no ?? '',
+            'role_name' => $roles->role_name ?? 'N/A',
+            'status' => isset($roles->status) && $roles->status == 1 ? 'active' : 'inactive',
+        ];
+
+        if ($travel_id !== null) {
+            $res = $this->reservations->where('travel_id', $travel_id)->first();
+            if ($res) {
+                $memberResp['arrival_date'] = $res->arrival_date;
+                $memberResp['return_date'] = $res->return_date;
+            }
+        }
+        else {
+            $memberResp['arrival_date'] = null;
+            $memberResp['return_date'] = null;
         }
 
         return $memberResp;
     }
 
+
     // -=-------- This method will use only for "MEMBERS" that are existing in INTIMUS --------------------------------
-    public function createMembership($data, $userData)
+    public function createMembership($data, $userData, $reserveData)
     {
         $member = $this->members->firstOrCreate(
             [
@@ -98,11 +118,29 @@ class MembershipRepository implements MembershipInterface
         {
             $user->user_roles()->attach(2, ['status' => 0]);
         }
+        else if($data['mem_type'] === "dependent")
+        {
+            $user->user_roles()->attach(3, ['status' => 0]);
+        }
+        else if($data['mem_type'] === "descendant")
+        {
+            $user->user_roles()->attach(5, ['status' => 0]);
+        }
+
+        if($reserveData['arrival_date'] !== null || $reserveData['return_date'] !== null)
+        {
+            $reservation = $this->reservations->create([
+                'user_id' => $user->user_id,
+                'arrival_date' => $reserveData['arrival_date'],
+                'return_date' => $reserveData['return_date'] ?? Carbon::now()->format('Y-m-d')
+            ]);
+        }
 
         // Return both User and Membership for reference
         return [
             'membership' => $member,
-            'user' => $user
+            'user' => $user,
+            'reservation' => $reservation ?? []
         ];
     }
     // --------------------------------------------------------------------

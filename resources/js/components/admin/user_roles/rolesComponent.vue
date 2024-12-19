@@ -8,11 +8,9 @@
             Add New Role
         </button>
 
-        <!-- Main Container for Table -->
         <div
             class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-900 p-6 mt-6"
         >
-            <!-- Table -->
             <table
                 class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
             >
@@ -31,8 +29,8 @@
                         :key="index"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                     >
-                        <td class="px-6 py-4">{{ role.role_name }}</td>
-                        <td class="px-6 py-4">{{ role.status }}</td>
+                        <td class="px-6 py-4">{{ role.role_name.charAt(0).toUpperCase() + role.role_name.slice(1).toLowerCase() }}</td>
+                        <td class="px-6 py-4">{{ role.status === 1 ? "Active" : "Inactive" }}</td>
                         <td
                             class="px-6 py-4 text-blue-600 hover:text-blue-800 cursor-pointer"
                         >
@@ -54,7 +52,6 @@
             </table>
         </div>
 
-        <!-- Add Role Modal Component -->
         <addRoleComponent v-if="isAddModalOpen" @close="closeAddModal" />
 
         <!-- Edit Role Modal Component -->

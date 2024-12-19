@@ -81,4 +81,9 @@ class MembershipController extends Controller
     {
         return $this->member->deleteMember($request);
     }
+
+    public function getIntimusUsers(Request $request)
+    {
+        return $this->member->intimusMemberData($request);
+    }
 }

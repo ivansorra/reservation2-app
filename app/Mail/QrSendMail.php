@@ -32,7 +32,7 @@ class QrSendMail extends Mailable
 
     public function build()
     {
-        return $this->view('emailQrConfirmation')->with(
+        return $this->subject('Balesin Island Club QR Code')->view('emailQrConfirmation')->with(
             [
                 'user_role' => $this->user_role,
                 'user_name' => $this->user_name,

@@ -86,6 +86,7 @@ class UserServices
         FlightReservationRequest $reservationRequest
     ) {
         try {
+            // dd($request->all());
             // Validate UserRequest
             $userValidator = $userReq->authorize($request);
             if ($userValidator instanceof JsonResponse) {
@@ -146,11 +147,19 @@ class UserServices
             $reservationValidatedData['user_id'] = $user_id;
             $emergencyDetailsValidatedData['user_id'] = $user_id;
 
-            $create_reservation = $this->reservation->createReservation($reservationValidatedData);
+            if($request->has('travel_id') && $request->get('travel_id') === null)
+            {
+                $create_reservation = $this->reservation->createReservation($reservationValidatedData);
+            }
+            else {
+                $travel_id = $request->get('travel_id');
+                $create_reservation = $this->reservation->getReservation($travel_id);
+            }
+
             $create_contact_emergency = $this->emergency_details->createEmergencyDetail($emergencyDetailsValidatedData);
 
             // Serialize the QR content into a JSON string
-            $qr_content = json_encode([
+            $qr_content_data = json_encode([
                 'name' => $create_user->name,
                 'role' => $userValidatedData['role_id'],
                 'email_address' => $create_user->email_address,
@@ -162,7 +171,7 @@ class UserServices
             $qr_code_data = [
                 'user_id' => $user_id,
                 'travel_id' => $create_reservation->travel_id,
-                'qr_content' => $qr_content, // Use the serialized content
+                'qr_content' => $qr_content_data, // Use the serialized content
                 'qr_expiration_start' => $reservationValidatedData['arrival_date'],
                 'qr_expiration_end' => $reservationValidatedData['return_date'],
                 'is_active' => true,
@@ -170,31 +179,37 @@ class UserServices
 
             $create_qr = $this->qr_code->generateQrCode($qr_code_data);
 
-            // Generate the QR code
-            $qrCode = QrCode::format('png')->size(200)->generate($qr_content); // Pass the stringified content
+            $qr_content = url('/qr/show/'. $create_qr->qr_id);
 
-            // Prepare QR code file path
+            // ------------------------------------------------------------------------------
+            $qrCode = QrCode::format('png')->size(200)->generate($qr_content);
+            $qrCodeBase64 = base64_encode($qrCode);
+
             $duration = isset($reservationValidatedData['return_date'])
                 ? Carbon::parse($reservationValidatedData['arrival_date'])->toFormattedDateString().' to '.Carbon::parse($reservationValidatedData['return_date'])->toFormattedDateString()
                 : Carbon::parse($reservationValidatedData['arrival_date'])->toFormattedDateString();
 
             $qrPath = 'qr_codes/' . $create_user->name . '-' . $duration . '.png';
-            $qrFullPath = public_path($qrPath);
-            file_put_contents($qrFullPath, $qrCode);
-            $qrCodeUrl = asset($qrPath);
+            Storage::disk('public')->put($qrPath, $qrCode);
+            $qrImgTag = '<img src="data:image/png;base64,' . $qrCodeBase64 . '" alt="QR Code">';
 
-            // Send email with the QR code
+            if($request->has('alternate_email'))
+            {
+                $create_user->email_address = $request->get('alternate_email');
+            }
+
             Mail::to($create_user->email_address)->send(new QrSendMail(
                 $role_data['role_name'],
                 $create_user->name,
                 $create_reservation->arrival_date,
                 $create_reservation->return_date,
                 $create_qr->qr_id,
-                $qrCodeUrl
+                $qrImgTag
             ));
 
             return $this->successResponse([
                 'user' => $create_user,
+                'email_address' => $create_user->email_address,
                 'reservation' => $create_reservation,
                 'emergency_details' => $create_contact_emergency,
             ], 'Successfully created user', 200);

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->increments('travel_id');
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('user_id')->on('users');
-            $table->date('arrival_date');
-            $table->date('return_date');
+            $table->date('arrival_date')->nullable();
+            $table->date('return_date')->nullable();
             $table->timestamps();
         });
     }

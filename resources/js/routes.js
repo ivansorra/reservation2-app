@@ -9,6 +9,7 @@ import adminComponent from './components/templates/adminComponent.vue';
 import membershipForm from './components/admin/membershipForm.vue';
 import indexComponent from './components/admin/members/indexComponent.vue';
 import rolesComponent from './components/admin/user_roles/rolesComponent.vue';
+import activityComponent from './components/admin/activities/activityComponent.vue';
 // ---------------------------------------------------------------------------
 
 const routes = [
@@ -21,7 +22,7 @@ const routes = [
     path: '/reservation_form',
     name: 'form',
     component: Form,
-    // meta: { requiresAuth: true }
+    meta: { requiresAuth: true }
   },
   {
     path: '/qr_response',
@@ -43,17 +44,22 @@ const routes = [
         {
             path: '',
             name: 'index',
-            component: indexComponent
+            component: membershipForm
         },
         {
             path: 'membership',
             name: 'membership',
-            component: membershipForm
+            component: indexComponent
         },
         {
             path: 'roles',
             name: 'roles',
             component: rolesComponent
+        },
+        {
+            path: 'travel_logs',
+            name: 'travel_logs',
+            component: activityComponent
         }
     ]
   }
@@ -62,6 +68,19 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+});
+
+router.beforeEach((to, from, next) => {
+    const isAuthenticated = sessionStorage.getItem('info'); // Example for auth status
+
+    if (to.meta.requiresAuth && !isAuthenticated) {
+      next({ name: 'login' });
+    } else if (to.name === 'login' && isAuthenticated) {
+      next({ name: 'form' });
+    } else {
+      // Allow navigation
+      next();
+    }
 });
 
 export default router;

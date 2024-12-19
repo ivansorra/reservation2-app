@@ -45,7 +45,7 @@ class UserRepository implements UsersInterface
                 [
                     'name' => $data['name'],
                     'address' => $data['address'],
-                    'birthdate' => isset($data['birthdate']) ? Carbon::parse($data['birthdate'])->format('Y-m-d') : null,
+                    'birthdate' => isset($data['birthdate']) ? Carbon::parse($data['birthdate'])->format('m-d-Y') : null,
                     'contact_no' => $data['contact_no'],
                     'user_status' => $data['user_status'],
                 ]

@@ -1,7 +1,12 @@
 <template>
     <div class="min-h-screen bg-gray-100 flex items-center justify-center">
         <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
-            <h1 class="text-2xl font-bold text-blue-600 mb-4">
+            <div class="col-md-12">
+                <div class="d-flex align-items-center">
+                    <img v-bind:src="'images/balesin_logo.png'" class="rounded-t-lg h-50 w-100" alt="Image" />
+                </div>
+            </div>
+            <h1 class="text-2xl font-bold text-blue-600 mb-4 mt-2">
                 Tracking System
             </h1>
             <form @submit.prevent="submitForm">
@@ -118,12 +123,31 @@ export default {
         const fullName = ref("");
         const arrivalDate = ref("");
         const location = ref("");
+        const qrId = ref("");
 
         const router = useRouter();
 
         const isDisabled = computed(() => {
             return emailAddress.value !== '' && fullName.value !== '' && arrivalDate.value !== '' && location.value !== '';
         });
+
+        const populateForm = async () => {
+            try {
+                const response = await axios.get("http://localhost:8000/api/qr/show",
+                    {
+                        parmas: {qr_id: 1},
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": document.querySelector(
+                                'meta[name="csrf-token"]'
+                            ).content,
+                        },
+                    }
+                );
+            } catch (e){
+                console.error(e);
+            }
+        }
 
         const submitForm = async () => {
 

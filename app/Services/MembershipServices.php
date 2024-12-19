@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Repositories\MembershipRepository;
+use App\Repositories\FlightReservationRepository;
 
 // ----------- Custom Requests -----------------
 use App\Http\Requests\MembershipRequest;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\FlightReservationRequest;
 // --------------------------------------
 
 // ----------- Laravel Requests ----------------
@@ -25,17 +27,20 @@ use App\Traits\APIRequestTrait;
 // ----------- Laravel Dates -------------------
 use Carbon\Carbon;
 
+use function PHPUnit\Framework\isEmpty;
+
 class MembershipServices
 {
     use ResponseTraits, APIRequestTrait;
 
-    private $membershipRepository;
+    private $membershipRepository, $reservationRepository;
     /**
      * Create a new class instance.
      */
-    public function __construct(MembershipRepository $memberRepository)
+    public function __construct(MembershipRepository $memberRepository, FlightReservationRepository $reservationRepo)
     {
         $this->membershipRepository = $memberRepository;
+        $this->reservationRepository = $reservationRepo;
     }
 
     public function getMembersList(Request $request){
@@ -50,6 +55,20 @@ class MembershipServices
         }
     }
 
+    public function intimusMemberData(Request $request)
+    {
+        try {
+            $get_intimus_res = $this->get_intimus_members($request);
+
+            if($get_intimus_res)
+            {
+                return $this->successResponse($get_intimus_res, 'Successfully Called API', 200);
+            }
+        } catch (\Exception $e) {
+            return $this->errorResponse($e, 'Error', 400);
+        }
+    }
+
     public function getMemberById(Request $request)
     {
         try {
@@ -57,37 +76,73 @@ class MembershipServices
             if ($get_member_id) {
                 $membersValidatedData = [
                     'membership_no' => $get_member_id['member_number'] ?? null,
-                    'mem_type' => $request->get('mem_type'),
+                    'mem_type' => null,
+                    // 'arrivalDate' => $get_member_id['nextArrDt'] ?? null,
                     'status' => true,
                 ];
 
+                if($get_member_id['relation'] === "DESCENDANTS")
+                {
+                    $membersValidatedData['mem_type'] = $get_member_id['relation'];
+                    return response()->json([
+                        'success' => false,
+                        'data' => $membersValidatedData,
+                        'message' => "You're a descendant. Kindly proceed as guest to continue"
+                    ]);
+                }
+
+                $membersValidatedData['mem_type'] = $request->get('mem_type');
+
                 $usersValidatedData = [
                     'name' => $get_member_id['member_name'] ?? null,
-                    'address' => "123 Sample St",
-                    'email_address' => 'samples@alphaland.com.ph',
-                    'birthdate' => Carbon::parse('01/11/1998')->format('Y-m-d'),
-                    'contact_no' => "09120429426",
+                    'address' => $get_member_id['address']['address'],
+                    'email_address' => $get_member_id['member_email'],
+                    'birthdate' => Carbon::parse($get_member_id['birthday'])->format('m-d-Y'),
+                    'contact_no' => $get_member_id['phone_number'],
                     'user_status' => true,
                 ];
 
-                // dd($membersValidatedData);
+                // dd($usersValidatedData);
                 $getExistingMember = $this->membershipRepository->getMembershipNo($get_member_id['member_number']);
 
                 if ($getExistingMember) {
                     return $this->successResponse($getExistingMember, 'User already exists', 200);
                 } else {
-                    // Create new membership and user record
-                    $create_member = $this->membershipRepository->createMembership($membersValidatedData, $usersValidatedData);
+                    $currentDate = Carbon::now();
+
+                    $daysDifference = Carbon::parse($get_member_id['arrival_date'])->diffInDays($currentDate);
+
+                    if ($daysDifference <= 7) {
+                        $flightReserveReq = [
+                            'arrival_date' => $get_member_id['arrival_date'] !== "" ? Carbon::parse($get_member_id['arrival_date'])->format('Y-m-d') : null,
+                            'return_date'  => null,
+                        ];
+
+                        $create_member = $this->membershipRepository->createMembership($membersValidatedData, $usersValidatedData, $flightReserveReq);
+                    } else {
+                        $create_member = $this->membershipRepository->createMembership($membersValidatedData, $usersValidatedData, null);
+                    }
+
+                    // dd($create_member);
 
                     if ($create_member) {
-                        $getExistingMember = $this->membershipRepository->getMembershipNo($get_member_id['member_number']);
+                        if($create_member['reservation'] === [])
+                        {
+                            $getExistingMember = $this->membershipRepository->getMembershipNo($get_member_id['member_number'], null);
+                        }
+                        else {
+                            $getExistingMember = $this->membershipRepository->getMembershipNo($get_member_id['member_number'], $create_member['reservation']['travel_id']);
+                            $getExistingMember['travel_id'] = $create_member['reservation']['travel_id'];
+                        }
+
                         return $this->successResponse($getExistingMember, 'Successfully added new member', 200);
-                    } else {
-                        return response()->json([
-                            'success' => false,
-                            'error' => 'Failed to create new member',
-                        ], 400);
                     }
+
+                    return response()->json([
+                        'success' => false,
+                        'error'   => 'Failed to create new member',
+                    ], 400);
+
                 }
             }
         } catch (\Exception $e) {
@@ -119,7 +174,12 @@ class MembershipServices
 
             $usersValidatedData['user_status'] = $usersValidatedData['user_status'] == 'active' ? true : false;
 
-            $create_member = $this->membershipRepository->createMembership($membersValidatedData, $usersValidatedData);
+            // $flightReserveReq = [
+            //     'arrival_date' => Carbon::parse($get_member_id['arrival_date'])->format('Y-m-d') ?? null,
+            //     'return_date'  => null,
+            // ];
+
+            $create_member = $this->membershipRepository->createMembership($membersValidatedData, $usersValidatedData, []);
 
             return $this->successResponse($create_member, 'Success', 200);
 

@@ -1,8 +1,18 @@
 <template>
     <div class="row justify-content-md-center">
-        <div class="card" style="width: 40rem; margin-top: 250px">
+        <div class="card" style="width: 40rem; margin-top: 150px">
             <div class="card-body">
-                <img v-bind:src="'images/balesinbanner.jpg'" class="rounded-t-lg" alt="Image description" />
+                <div class="col-md-10">
+                    <div class="d-flex align-items-center">
+                        <img v-bind:src="'images/balesin_logo.png'" class="justify-content-center rounded-t-lg h-40 w-110" style="margin-left: 170px;"alt="Image description" />
+                        <!-- <img v-bind:src="'images/christmasbanner.jpg'" class="rounded-t-lg h-25 w-100 me-3 ml-2 mt-1 mb-4" alt="Image description" /> -->
+                    </div>
+                </div>
+
+                <div class="text-center mb-3">
+                    <h1 class="text-lg font-semibold">Balesin QR Form</h1>
+                </div>
+
                 <form @submit.prevent="reservationForm">
                     <div class="mb-3">
                         <select
@@ -23,51 +33,61 @@
                     </div>
 
                     <div v-if="userType === 'member'" class="mb-3">
-                        <label for="member">Membership ID:</label>
+                        <label for="member">Membership No:</label>
                         <input
                             type="text"
                             v-model="membership_no"
                             class="form-control"
                             id="member"
-                            placeholder="Enter Membership ID"
+                            placeholder="Please enter your Membership No."
                             required
                         />
                     </div>
 
                     <div v-if="userType === 'spouse'" class="mb-3">
-                        <label for="member">Membership ID:</label>
+                        <label for="member">Spouse Membership No:</label>
                         <input
                             type="text"
                             v-model="membership_no"
                             class="form-control"
                             id="member"
-                            placeholder="Enter Membership ID"
+                            placeholder="Please enter the Spouse Membership No."
                             required
                         />
                     </div>
 
                     <div v-if="userType === 'dependent'" class="mb-3">
-                        <label for="dependent">Primary Membership ID:</label>
+                        <label for="dependent">Dependent Membership No:</label>
                         <input
                             type="text"
                             v-model="membership_no"
                             class="form-control"
                             id="dependent"
-                            placeholder="Enter Primary Member ID"
+                            placeholder="Please enter the Dependent Membership No."
                             required
                         />
+
+                        <input type="hidden" v-model="validateDepedent">
+
+                        <div v-if="validateDepedent === 'DESCENDANTS'" class="mt-3 mb-3 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                            <strong class="font-bold">You're a descendant.</strong>&nbsp;
+                            <span class="block sm:inline">Kindly proceed as guest to continue.</span>
+                            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                                <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                            </span>
+                        </div>
                     </div>
 
                     <div v-if="userType === 'guest'" class="mb-3">
                         <label for="sponsoring"
-                            >Sponsoring Membership ID:</label
+                            >Sponsoring Membership No:</label
                         >
                         <input
                             type="text"
                             v-model="membership_no"
                             class="form-control"
                             id="sponsoring"
-                            placeholder="Enter Sponsoring Member ID"
+                            placeholder="Please enter the Membership No. of your Sponsoring Member"
                             required
                         />
                     </div>
@@ -87,6 +107,7 @@
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import dayjs from 'dayjs';
 
 export default {
     setup() {
@@ -94,6 +115,8 @@ export default {
         const membership_no = ref("");
         const primaryMemberID = ref("");
         const sponsoringMemberID = ref("");
+        const validateDepedent = ref("");
+
         const router = useRouter();
 
         const reservationForm = async () => {
@@ -112,42 +135,60 @@ export default {
                 });
 
                 if (response.data) {
-                    console.log("Response Data:", response.data);
+                    // console.log("Response Data:", response.data);
                     if (response.data.data && Object.keys(response.data.data).length > 0) {
 
                         const userTypeVal = {};
+                        // return response.data.data;
+                        console.log(response.data.data)
+                        response.data.data.birthdate = formatDateToMMDDYYYY(response.data.data.birthdate);
 
                         switch(userType.value) {
                             case 'member':
                                 sessionStorage.setItem('info', JSON.stringify(response.data.data));
+                                router.push("/reservation_form");
                                 break;
                             case 'spouse':
                                 // userTypeVal['role_name'] = userType.value;
                                 // userTypeVal['membership_id'] = response.data.data.membership_id;
                                 sessionStorage.setItem('info', JSON.stringify(response.data.data));
+                                router.push("/reservation_form");
                                 break;
                             case 'dependent':
-                                userTypeVal['role_name'] = userType.value;
-                                userTypeVal['membership_id'] = response.data.data.membership_id;
-                                sessionStorage.setItem('info', JSON.stringify(userTypeVal));
+                                if(response.data.data.mem_type === "DESCENDANTS")
+                                {
+                                    validateDepedent.value = response.data.data.mem_type;
+                                    console.log(response.data.message)
+                                }
+                                else {
+                                    // userTypeVal['role_name'] = userType.value;
+                                    // userTypeVal['membership_id'] = response.data.data.membership_id;
+                                    // userTypeVal['membership_no'] = response.data.data.membership_no;
+
+                                    // sessionStorage.setItem('info', JSON.stringify(userTypeVal));
+                                    sessionStorage.setItem('info', JSON.stringify(response.data.data));
+                                    router.push("/reservation_form");
+                                }
                                 break;
                             case 'guest':
                                 userTypeVal['role_name'] = userType.value;
                                 userTypeVal['membership_id'] = response.data.data.membership_id;
+                                userTypeVal['membership_no'] = response.data.data.membership_no;
+                                userTypeVal['member_name'] = response.data.data.member_name;
                                 sessionStorage.setItem('info', JSON.stringify(userTypeVal));
+                                router.push("/reservation_form");
                                 break;
                             default:
                                 console.warn("Unknown userType value:", userType.value);
                                 break;
                         }
-
-                        router.push("/reservation_form");
                     } else {
                         alert("Membership ID does not exist");
                     }
                 }
             } catch (error) {
                 if (error.response) {
+                    alert("Membership ID does not exist");
                     console.error("Error Response Data:", error.response.data);
                     console.error("Error Response Status:", error.response.status);
                     console.error("Error Response Headers:", error.response.headers);
@@ -167,6 +208,14 @@ export default {
             sponsoringMemberID.value = "";
         };
 
+        const formatDateToMMDDYYYY = (dateString) => {
+            const date = new Date(dateString);
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const day = String(date.getDate()).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${month}-${day}-${year}`;
+        };
+
         // const imageUrl = computed(() => {
         //     return `http://localhost:8000/public/storage/images/balesinbanner.jpg`;
         // });
@@ -178,6 +227,7 @@ export default {
             sponsoringMemberID,
             updateUserType,
             reservationForm,
+            validateDepedent
             // imageUrl
         };
     },

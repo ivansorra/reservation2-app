@@ -13,6 +13,8 @@ Route::prefix('members')->group(function (){
     Route::post('/create', [App\Http\Controllers\Membership\MembershipController::class, 'store']);
     Route::put('/update', [App\Http\Controllers\Membership\MembershipController::class, 'update']);
     Route::delete('/delete', [App\Http\Controllers\Membership\MembershipController::class, 'destroy']);
+
+    Route::get('/verify_user', [App\Http\Controllers\Membership\MembershipController::class, 'getIntimusUsers']);
 });
 
 Route::prefix('roles')->group(function () {
@@ -53,6 +55,14 @@ Route::prefix('qr')->group(function () {
     Route::post('/create', [App\Http\Controllers\QrCodeController::class,'store']);
     Route::put('/update', [App\Http\Controllers\QrCodeController::class, 'update']);
     Route::delete('/delete', [App\Http\Controllers\QrCodeController::class, 'destroy']);
+});
+
+Route::prefix('travel_activity')->group(function() {
+    Route::get('/', [App\Http\Controllers\ActivityController::class, 'index']);
+    Route::get('/show', [App\Http\Controllers\ActivityController::class, 'show']);
+    Route::post('/create', [App\Http\Controllers\ActivityController::class, 'store'])->name('create.activity');
+    Route::put('/update', [App\Http\Controllers\ActivityController::class, 'update']);
+    Route::delete('/delete', [App\Http\Controllers\ActivityController::class, 'destroy']);
 });
 
 // Route::middleware(['auth:sanctum'])->group(function () {

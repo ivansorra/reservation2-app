@@ -2,7 +2,10 @@
     <div class="flex h-screen bg-gray-100">
         <!-- Sidebar -->
         <div class="w-64 bg-white border-r">
-            <div class="p-4 font-bold">Qr Code Reservation Admin</div>
+            <div class="flex justify-center mt-4">
+                <img v-bind:src="'../images/balesin_logo.png'" class="rounded-t-lg h-40 w-64" alt="Balesin Logo" />
+            </div>
+            <!-- <div class="p-2 font-bold text-center">Balesin Island Club QR Admin</div> -->
             <ul class="list-none">
                 <li class="relative">
                     <button
@@ -72,7 +75,7 @@
                             class="block p-2 text-gray-700 hover:bg-gray-200"
                         >Manage Reservations</router-link>
                         <router-link
-                            to="/services/service2"
+                            to="/admin/travel_logs"
                             class="block p-2 text-gray-700 hover:bg-gray-200"
                         >Manage Activity</router-link>
                     </ul>
