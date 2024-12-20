@@ -10,6 +10,7 @@ import membershipForm from './components/admin/membershipForm.vue';
 import indexComponent from './components/admin/members/indexComponent.vue';
 import rolesComponent from './components/admin/user_roles/rolesComponent.vue';
 import activityComponent from './components/admin/activities/activityComponent.vue';
+import adminLoginComponent from './components/admin/login/indexComponent.vue';
 // ---------------------------------------------------------------------------
 
 const routes = [
@@ -41,6 +42,11 @@ const routes = [
     name: 'admin',
     component: adminComponent,
     children: [
+        {
+            path: 'login',
+            name: 'adminlogin',
+            component: adminLoginComponent
+        },
         {
             path: '',
             name: 'index',
