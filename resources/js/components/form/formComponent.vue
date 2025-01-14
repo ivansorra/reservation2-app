@@ -291,12 +291,6 @@
                                         class="peer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-3 py-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         v-model="travelStart"
                                         required
-                                        :disabled="isArrivalDisabled"
-                                        :style="{
-                                            backgroundColor: isArrivalDisabled
-                                                ? '#d2d2d2'
-                                                : 'white',
-                                        }"
                                     />
                                     <label
                                         for="travelStart"
@@ -322,12 +316,6 @@
                                         class="peer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-3 py-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         v-model="travelEnd"
                                         required
-                                        :disabled="isDepartureDisabled"
-                                        :style="{
-                                            backgroundColor: isDepartureDisabled
-                                                ? '#d2d2d2'
-                                                : 'white',
-                                        }"
                                     />
                                     <label
                                         for="travelEnd"
@@ -790,37 +778,38 @@ export default {
                 });
             }
 
-            if(infoDetails.emergencyContact != {})
-            {
-                const contactDetails = {
-                    "emergency_contact_name": contactEmergencyName.value,
-                    "emergency_contact_no": contactEmergencyNumber.value,
-                    "emergency_contact_address": contactEmergencyAddress.value,
-                    "relationship": contactEmergencyRelationship.value,
-                };
+            // if(infoDetails.emergencyContact != {})
+            // {
+            //     const contactDetails = {
+            //         "name": contactEmergencyName.value,
+            //         "contact_no": contactEmergencyNumber.value,
+            //         "address": contactEmergencyAddress.value,
+            //         "relationship": contactEmergencyRelationship.value,
+            //         "user_id": infoDetails.user_id
+            //     };
 
-                try {
-                    const emergencyContactResponse = await axios.put("http://localhost:8000/api/emergency_details/update", contactDetails, {
-                        headers: {
-                            "Content-Type": "application/json", // Use JSON to avoid URL-encoded behavior
-                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-                        },
-                    })
+            //     try {
+            //         const emergencyContactResponse = await axios.put("http://localhost:8000/api/emergency_details/update", contactDetails, {
+            //             headers: {
+            //                 "Content-Type": "application/json", // Use JSON to avoid URL-encoded behavior
+            //                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+            //             },
+            //         })
 
-                    if(emergencyContactResponse.status === 200)
-                    {
-                        console.error("Unexpected response:", userResponse);
-                    }
-                } catch (e) {
-                    console.error("Error updating emergency details data:", err);
-                    Swal.fire({
-                        title: "Error",
-                        text: "Error updating the emergency contact details: " + err.message,
-                        icon: "error",
-                        confirmButtonText: "Close",
-                    });
-                }
-            }
+            //         if(emergencyContactResponse.status === 200)
+            //         {
+            //             console.error("Unexpected response:", userResponse);
+            //         }
+            //     } catch (e) {
+            //         console.error("Error updating emergency details data:", err);
+            //         Swal.fire({
+            //             title: "Error",
+            //             text: "Error updating the emergency contact details: " + err.message,
+            //             icon: "error",
+            //             confirmButtonText: "Close",
+            //         });
+            //     }
+            // }
         };
 
         const isEmailDisabled = computed(() => isAutoFilledEmail.value);

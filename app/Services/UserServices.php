@@ -154,9 +154,27 @@ class UserServices
             else {
                 $travel_id = $request->get('travel_id');
                 $create_reservation = $this->reservation->getReservation($travel_id);
+
+                if($create_reservation)
+                {
+                    $update_flight_dates = $this->reservation->updateReservation($user_id, $reservationValidatedData);
+                }
             }
 
-            $create_contact_emergency = $this->emergency_details->createEmergencyDetail($emergencyDetailsValidatedData);
+            if($emergencyDetailsValidatedData != [])
+            {
+                $emergencyDatas = [
+                    'name' => $emergencyDetailsValidatedData['emergency_contact_name'],
+                    'contact_no' => $emergencyDetailsValidatedData['emergency_contact_no'],
+                    'address' => $emergencyDetailsValidatedData['emergency_contact_address'],
+                    'relationship' => $emergencyDetailsValidatedData['relationship'],
+                ];
+
+                $contact_emergency = $this->emergency_details->updateEmergencyDetail($user_id, $emergencyDatas);
+            }
+            else {
+                $contact_emergency = $this->emergency_details->createEmergencyDetail($emergencyDetailsValidatedData);
+            }
 
             // Serialize the QR content into a JSON string
             $qr_content_data = json_encode([
@@ -201,8 +219,8 @@ class UserServices
             Mail::to($create_user->email_address)->send(new QrSendMail(
                 $role_data['role_name'],
                 $create_user->name,
-                $create_reservation->arrival_date,
-                $create_reservation->return_date,
+                $create_reservation->arrival_date ?: $update_flight_dates->arrival_date,
+                $create_reservation->return_date ?: $update_flight_dates->return_date,
                 $create_qr->qr_id,
                 $qrImgTag
             ));
@@ -210,8 +228,8 @@ class UserServices
             return $this->successResponse([
                 'user' => $create_user,
                 'email_address' => $create_user->email_address,
-                'reservation' => $create_reservation,
-                'emergency_details' => $create_contact_emergency,
+                'reservation' => $create_reservation ?: $update_flight_dates,
+                'emergency_details' => $contact_emergency,
             ], 'Successfully created user', 200);
         } catch (\Exception $e) {
             return $this->errorResponse($e, 'Error', 400);

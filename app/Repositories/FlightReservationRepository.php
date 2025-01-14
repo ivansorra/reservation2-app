@@ -50,7 +50,7 @@ class FlightReservationRepository implements FlightReservationInterface
 
     public function updateReservation($id, $data)
     {
-        $travel_reservation = $this->reservation->find($id);
+        $travel_reservation = $this->reservation->where(['user_id' => $id]);
 
         if (!$travel_reservation) {
             throw new \Exception('Travel reservation not found.');

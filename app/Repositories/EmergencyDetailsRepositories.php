@@ -43,7 +43,7 @@ class EmergencyDetailsRepositories implements EmergencyDetailsInterface
 
     public function updateEmergencyDetail($id, $data)
     {
-        $find_detail_id = $this->details->find($id);
+        $find_detail_id = $this->details->where(['user_id' => $id]);
 
         if(!$find_detail_id)
         {

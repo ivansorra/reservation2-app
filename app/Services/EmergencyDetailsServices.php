@@ -86,9 +86,9 @@ class EmergencyDetailsServices
             }
 
             $validatedData = $validate->validated();
-            $detail_id = $request->get('emergency_detail_id');
+            $user_id = $request->get('user_id');
 
-            $updated_reservation = $this->emergencyDetailRepo->updateEmergencyDetail($detail_id, $validatedData);
+            $updated_reservation = $this->emergencyDetailRepo->updateEmergencyDetail($user_id, $validatedData);
 
             return $this->successResponse($updated_reservation, 'Success', 200);
         } catch (\Exception $e) {
