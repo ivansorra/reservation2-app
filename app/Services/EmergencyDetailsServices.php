@@ -45,9 +45,10 @@ class EmergencyDetailsServices
     public function getSingleEmergencyDetail(Request $request)
     {
         try {
-            $emergency_detail_id = $request->get('emergency_detail_id');
+            // $emergency_detail_id = $request->get('emergency_detail_id');
+            $user_id = $request->get('user_id');
 
-            $emergencyDetail = $this->emergencyDetailRepo->getEmergencyDetail($emergency_detail_id);
+            $emergencyDetail = $this->emergencyDetailRepo->getEmergencyDetail($user_id);
 
             return $this->successResponse($emergencyDetail, 'Success', 200);
         } catch (\Exception $e) {

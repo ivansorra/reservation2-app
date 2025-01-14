@@ -643,6 +643,14 @@ export default {
                 travelStart.value = infoDetails.arrival_date || "";
                 travelEnd.value = infoDetails.return_date || "";
 
+                if(infoDetails.emergencyContact)
+                {
+                    contactEmergencyName.value = infoDetails.emergencyContact.name || "";
+                    contactEmergencyNumber.value = infoDetails.emergencyContact.contact_no || "";
+                    contactEmergencyAddress.value = infoDetails.emergencyContact.address || "";
+                    contactEmergencyRelationship.value = infoDetails.emergencyContact.relationship || "";
+                }
+
                 isAutoFilledEmail.value = !!infoDetails.email_address;
                 isAutoFilledFullName.value = !!infoDetails.member_name;
                 isAutoFilledContact.value = !!infoDetails.contact_no;
@@ -780,6 +788,38 @@ export default {
                     icon: "error",
                     confirmButtonText: "Close",
                 });
+            }
+
+            if(infoDetails.emergencyContact != {})
+            {
+                const contactDetails = {
+                    "emergency_contact_name": contactEmergencyName.value,
+                    "emergency_contact_no": contactEmergencyNumber.value,
+                    "emergency_contact_address": contactEmergencyAddress.value,
+                    "relationship": contactEmergencyRelationship.value,
+                };
+
+                try {
+                    const emergencyContactResponse = await axios.put("http://localhost:8000/api/emergency_details/update", contactDetails, {
+                        headers: {
+                            "Content-Type": "application/json", // Use JSON to avoid URL-encoded behavior
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                        },
+                    })
+
+                    if(emergencyContactResponse.status === 200)
+                    {
+                        console.error("Unexpected response:", userResponse);
+                    }
+                } catch (e) {
+                    console.error("Error updating emergency details data:", err);
+                    Swal.fire({
+                        title: "Error",
+                        text: "Error updating the emergency contact details: " + err.message,
+                        icon: "error",
+                        confirmButtonText: "Close",
+                    });
+                }
             }
         };
 

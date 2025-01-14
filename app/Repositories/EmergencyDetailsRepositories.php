@@ -21,9 +21,11 @@ class EmergencyDetailsRepositories implements EmergencyDetailsInterface
         return $this->details->paginate($perPage);
     }
 
-    public function getEmergencyDetail($id)
+    public function getEmergencyDetail($user_id = null)
     {
-        return $this->details->where('emergency_id', $id)->first();
+        $emergencyDetails = $this->details->where('user_id', $user_id)->first();
+        // return $this->details->where('emergency_id', $id)->first();
+        return $emergencyDetails;
     }
 
     public function createEmergencyDetail($data)

@@ -142,6 +142,7 @@ export default {
                         // return response.data.data;
                         console.log(response.data.data)
                         response.data.data.birthdate = formatDateToMMDDYYYY(response.data.data.birthdate);
+                        response.data.data.travel_id = response.data.data.travel_id;
 
                         switch(userType.value) {
                             case 'member':

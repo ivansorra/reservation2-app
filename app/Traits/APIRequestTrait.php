@@ -41,6 +41,7 @@ trait APIRequestTrait
                     "birthday" => $json_response['birthDate'],
                     "confirmation_no" => $json_response['nextConfNo'],
                     "arrival_date" => $json_response['nextArrDt'],
+                    "return_date" => $json_response['nextDepDt'],
                     "relation" => $json_response['relation']
                 ];
 

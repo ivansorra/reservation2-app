@@ -9,6 +9,7 @@ use App\Repositories\FlightReservationRepository;
 use App\Http\Requests\MembershipRequest;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\FlightReservationRequest;
+use App\Repositories\EmergencyDetailsRepositories;
 // --------------------------------------
 
 // ----------- Laravel Requests ----------------
@@ -33,14 +34,15 @@ class MembershipServices
 {
     use ResponseTraits, APIRequestTrait;
 
-    private $membershipRepository, $reservationRepository;
+    private $membershipRepository, $reservationRepository, $emergencyRepository;
     /**
      * Create a new class instance.
      */
-    public function __construct(MembershipRepository $memberRepository, FlightReservationRepository $reservationRepo)
+    public function __construct(MembershipRepository $memberRepository, FlightReservationRepository $reservationRepo, EmergencyDetailsRepositories $emergencyRepo)
     {
         $this->membershipRepository = $memberRepository;
         $this->reservationRepository = $reservationRepo;
+        $this->emergencyRepository = $emergencyRepo;
     }
 
     public function getMembersList(Request $request){
@@ -106,22 +108,51 @@ class MembershipServices
                 $getExistingMember = $this->membershipRepository->getMembershipNo($get_member_id['member_number']);
 
                 if ($getExistingMember) {
-                    return $this->successResponse($getExistingMember, 'User already exists', 200);
-                } else {
-                    $currentDate = Carbon::now();
+                    $user_id = $getExistingMember['user_id'];
 
-                    $daysDifference = Carbon::parse($get_member_id['arrival_date'])->diffInDays($currentDate);
+                    $hasEmergencyDetails = $this->emergencyRepository->getEmergencyDetail($user_id);
 
-                    if ($daysDifference <= 7) {
-                        $flightReserveReq = [
-                            'arrival_date' => $get_member_id['arrival_date'] !== "" ? Carbon::parse($get_member_id['arrival_date'])->format('Y-m-d') : null,
-                            'return_date'  => null,
+                    $reservation_exists = $this->reservationRepository->getReservation(null, $user_id);
+
+                    if($hasEmergencyDetails)
+                    {
+                        $getExistingMember['emergencyContact'] = [
+                            'name' => $hasEmergencyDetails['name'],
+                            'address' => $hasEmergencyDetails['address'],
+                            'contact_no' => $hasEmergencyDetails['contact_no'],
+                            'relationship' => $hasEmergencyDetails['relationship'],
                         ];
 
-                        $create_member = $this->membershipRepository->createMembership($membersValidatedData, $usersValidatedData, $flightReserveReq);
-                    } else {
-                        $create_member = $this->membershipRepository->createMembership($membersValidatedData, $usersValidatedData, null);
+                        // $getExistingMember['contactName'] = $hasEmergencyDetails['name'];
+                        // $getExistingMember['contactAddress'] = $hasEmergencyDetails['address'];
+                        // $getExistingMember['contactNumber'] = $hasEmergencyDetails['contact_no'];
+                        // $getExistingMember['contactRelation'] = $hasEmergencyDetails['relationship'];
                     }
+
+                    if($reservation_exists)
+                    {
+                        $getExistingMember['arrival_date'] = $reservation_exists['arrival_date'];
+                        $getExistingMember['return_date'] = $reservation_exists['return_date'];
+                        $getExistingMember['travel_id'] = $reservation_exists['travel_id'];
+                    }
+
+                    // dd($getExistingMember);
+                    return $this->successResponse($getExistingMember, 'User already exists', 200);
+                } else {
+                    // $currentDate = Carbon::now();
+
+                    // $daysDifference = Carbon::parse($get_member_id['arrival_date'])->diffInDays($currentDate);
+
+                    // if ($daysDifference <= 30) {
+                    $flightReserveReq = [
+                        'arrival_date' => $get_member_id['arrival_date']  !== "" ? Carbon::parse($get_member_id['arrival_date'])->format('Y-m-d') : null,
+                        'return_date'  => $get_member_id['return_date']  !== "" ? Carbon::parse($get_member_id['return_date'])->format('Y-m-d') : null,
+                    ];
+
+                    $create_member = $this->membershipRepository->createMembership($membersValidatedData, $usersValidatedData, $flightReserveReq);
+                    // } else {
+                    //     $create_member = $this->membershipRepository->createMembership($membersValidatedData, $usersValidatedData, null);
+                    // }
 
                     // dd($create_member);
 

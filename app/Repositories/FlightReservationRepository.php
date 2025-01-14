@@ -24,9 +24,17 @@ class FlightReservationRepository implements FlightReservationInterface
         return $this->reservation->paginate($perPage);
     }
 
-    public function getReservation($id)
+    public function getReservation($id = null, $user_id = null)
     {
-        return $this->reservation->where('travel_id', $id)->first();
+        if($user_id){
+            $reservation = $this->reservation->where('user_id', $user_id)->first();
+        }
+        else {
+            $reservation = $this->reservation->where('travel_id', $id)->first();
+        }
+
+        // return $this->reservation->where('travel_id', $id)->first();
+        return $reservation;
     }
 
     public function createReservation(array $data)
