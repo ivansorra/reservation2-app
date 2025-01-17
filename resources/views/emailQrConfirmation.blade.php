@@ -53,8 +53,8 @@
         <p>Dear Mr/Ms. {{ $user_name }},</p>
         <p>Good day! This is your unique Balesin Island Club QR Code.</p>
         <div class="qr-container">
-            {{-- <img src="{{$qrCodeUrl}}" alt="QR Code" style="width: 150px; height: 150px;" /> --}}
-            {!! $qrCodeUrl !!}
+            <img src="{{ $qrCodeUrl }}" alt="QR Code" style="width: 150px; height: 150px;" />
+            {{-- {!! $qrCodeUrl !!} --}}
         </div>
         <p><b>A photo of the QR Code must be saved on your mobile phone (e.g. Photo Gallery, Viber, Whats App) for scanning by Alphaland personnel upon flight check-in.</b></p>
         <p><b>Each passenger including infants must have a separate QR code.</b></p>

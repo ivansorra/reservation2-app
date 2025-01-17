@@ -29,6 +29,8 @@ use App\Traits\ResponseTraits;
 
 // ------------------- Storage ----------------------
 use Illuminate\Support\Facades\Storage;
+use Aws\S3\S3Client;
+use Aws\Exception\AwsException;
 // --------------------------------------------------
 
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -200,16 +202,42 @@ class UserServices
             $qr_content = url('/qr/show/'. $create_qr->qr_id);
 
             // ------------------------------------------------------------------------------
-            $qrCode = QrCode::format('png')->size(200)->generate($qr_content);
-            $qrCodeBase64 = base64_encode($qrCode);
+            $qrCodeBinary = QrCode::format('png')->size(200)->generate($qr_content);
+            $qrCodeBase64 = base64_encode($qrCodeBinary);
 
             $duration = isset($reservationValidatedData['return_date'])
-                ? Carbon::parse($reservationValidatedData['arrival_date'])->toFormattedDateString().' to '.Carbon::parse($reservationValidatedData['return_date'])->toFormattedDateString()
+                ? Carbon::parse($reservationValidatedData['arrival_date'])->toFormattedDateString() . ' to ' . Carbon::parse($reservationValidatedData['return_date'])->toFormattedDateString()
                 : Carbon::parse($reservationValidatedData['arrival_date'])->toFormattedDateString();
 
-            $qrPath = 'qr_codes/' . $create_user->name . '-' . $duration . '.png';
-            Storage::disk('public')->put($qrPath, $qrCode);
-            $qrImgTag = '<img src="data:image/png;base64,' . $qrCodeBase64 . '" alt="QR Code">';
+            $filename = $create_user->name . '-' . $duration . '.png';
+            $qrPath = 'qr_codes/' . $filename;
+
+            $s3Client = new S3Client([
+                'version' => 'latest',
+                'region' => env('AWS_DEFAULT_REGION'),
+                'credentials' => [
+                    'key'    => env('AWS_ACCESS_KEY_ID'),
+                    'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                ],
+                'http' => [
+                    'verify' => false // Disable SSL certificate verification (for debugging only)
+                ]
+            ]);
+
+            // Upload QR code image to S3
+            try {
+                $result = $s3Client->putObject([
+                    'Bucket' => env('AWS_BUCKET'),
+                    'Key'    => $qrPath,
+                    'Body'   => $qrCodeBinary,
+                    'ContentType' => 'image/png',
+                ]);
+
+                $qrPublicUrl = $result['ObjectURL'];
+
+            } catch (AwsException $e) {
+                dd('Error uploading to S3: ' . $e->getMessage());
+            }
 
             if($request->has('alternate_email'))
             {
@@ -222,7 +250,7 @@ class UserServices
                 $create_reservation->arrival_date ?: $update_flight_dates->arrival_date,
                 $create_reservation->return_date ?: $update_flight_dates->return_date,
                 $create_qr->qr_id,
-                $qrImgTag
+                $qrPublicUrl
             ));
 
             return $this->successResponse([
