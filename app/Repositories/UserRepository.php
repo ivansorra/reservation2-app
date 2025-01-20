@@ -23,6 +23,11 @@ class UserRepository implements UsersInterface
         return $this->users->paginate($perPage);
     }
 
+    public function getUsersByName($name)
+    {
+        return $this->users->where('name', 'like', '%'.$name.'%')->first();
+    }
+
     public function getUserById($id)
     {
         return $this->users->where('user_id', $id)->first();
@@ -45,7 +50,7 @@ class UserRepository implements UsersInterface
                 [
                     'name' => $data['name'],
                     'address' => $data['address'],
-                    'birthdate' => isset($data['birthdate']) ? Carbon::parse($data['birthdate'])->format('m-d-Y') : null,
+                    'birthdate' => isset($data['birthdate']) ? Carbon::parse($data['birthdate'])->format('Y-m-d') : null,
                     'contact_no' => $data['contact_no'],
                     'user_status' => $data['user_status'],
                 ]

@@ -142,7 +142,16 @@ class UserServices
 
                 $user_id = $create_user->id;
             } else {
-                $create_user = $memberExists;
+                $user_exists = $this->userRepository->getUsersByName($request->get('name'));
+
+                if(!$user_exists)
+                {
+                    $create_user = $this->userRepository->addUser($userValidatedData);
+                }
+                else {
+                    $create_user = $memberExists;
+                }
+
                 $user_id = $create_user->user_id;
             }
 
