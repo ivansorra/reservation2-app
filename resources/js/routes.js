@@ -38,15 +38,15 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/login',
+    name: 'adminlogin',
+    component: adminLoginComponent
+  },
+  {
     path: '/admin',
     name: 'admin',
     component: adminComponent,
     children: [
-        {
-            path: 'login',
-            name: 'adminlogin',
-            component: adminLoginComponent
-        },
         {
             path: '',
             name: 'index',

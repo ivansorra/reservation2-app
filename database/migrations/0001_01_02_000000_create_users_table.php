@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('membership_id')->references('membership_id')->on('membership')->onDelete('cascade');
             $table->string('name');
             $table->string('address');
-            $table->string('email_address')->unique();
+            $table->string('email_address');
             $table->date('birthdate');
             $table->bigInteger('contact_no')->nullable();
             $table->boolean('user_status')->default(1);
