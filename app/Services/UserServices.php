@@ -149,11 +149,22 @@ class UserServices
             $reservationValidatedData['user_id'] = $user_id;
             $emergencyDetailsValidatedData['user_id'] = $user_id;
 
-            if($request->has('travel_id') && $request->get('travel_id') === null)
+            // if($request->has('travel_id') && $request->get('travel_id') === null)
+            // {
+            //     $create_reservation = $this->reservation->createReservation($reservationValidatedData);
+            // }
+            // else {
+            //     $travel_id = $request->get('travel_id');
+            //     $create_reservation = $this->reservation->getReservation($travel_id);
+
+            //     if($create_reservation)
+            //     {
+            //         $update_flight_dates = $this->reservation->updateReservation($user_id, $reservationValidatedData);
+            //     }
+            // }
+
+            if($request->has('travel_id') && $request->get('travel_id') !== null)
             {
-                $create_reservation = $this->reservation->createReservation($reservationValidatedData);
-            }
-            else {
                 $travel_id = $request->get('travel_id');
                 $create_reservation = $this->reservation->getReservation($travel_id);
 
@@ -161,6 +172,9 @@ class UserServices
                 {
                     $update_flight_dates = $this->reservation->updateReservation($user_id, $reservationValidatedData);
                 }
+            }
+            else {
+                $create_reservation = $this->reservation->createReservation($reservationValidatedData);
             }
 
             if($emergencyDetailsValidatedData != [])
