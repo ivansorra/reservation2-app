@@ -132,6 +132,7 @@ class UserServices
 
             $user_id = null;
 
+            // dd($userValidatedData);
             $memberExists = $this->userRepository->getMemberUserId($membershipId);
             if (!$memberExists) {
                 $create_user = $this->userRepository->addUser($userValidatedData);
@@ -149,8 +150,13 @@ class UserServices
                     $create_user = $this->userRepository->addUser($userValidatedData);
                 }
                 else {
-                    $create_user = $memberExists;
+                    $userValidatedData['birthdate'] = Carbon::parse($userValidatedData['birthdate'])->format('Y-m-d');
+                    // $create_user = $memberExists;
+                    $update_user = $this->userRepository->updateUser($user_exists->user_id, $userValidatedData);
+                    $create_user = $update_user;
                 }
+
+                // dd($create_user);
 
                 $user_id = $create_user->user_id;
             }
