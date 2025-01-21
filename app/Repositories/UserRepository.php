@@ -46,7 +46,7 @@ class UserRepository implements UsersInterface
                 [
                     'membership_id' => $data['membership_id'],
                     // 'membership_id' => $data['membership_id'], // Assuming membership_id is unique for users
-                    'email_address' => $data['email_address'], // Assuming email is unique for users
+                    'name' => $data['name'], // Assuming email is unique for users
                 ],
                 [
                     'name' => $data['name'],
