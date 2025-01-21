@@ -147,7 +147,9 @@ class UserServices
 
                 if(!$user_exists)
                 {
+                    // dd($userValidatedData);
                     $create_user = $this->userRepository->addUser($userValidatedData);
+                    // dd($create_user);
                 }
                 else {
                     $userValidatedData['birthdate'] = Carbon::parse($userValidatedData['birthdate'])->format('Y-m-d');
@@ -194,17 +196,22 @@ class UserServices
 
             if($emergencyDetailsValidatedData != [])
             {
-                $emergencyDatas = [
-                    'name' => $emergencyDetailsValidatedData['emergency_contact_name'],
-                    'contact_no' => $emergencyDetailsValidatedData['emergency_contact_no'],
-                    'address' => $emergencyDetailsValidatedData['emergency_contact_address'],
-                    'relationship' => $emergencyDetailsValidatedData['relationship'],
-                ];
+                $check_existing_emergency = $this->emergency_details->getEmergencyDetail($user_id);
 
-                $contact_emergency = $this->emergency_details->updateEmergencyDetail($user_id, $emergencyDatas);
-            }
-            else {
-                $contact_emergency = $this->emergency_details->createEmergencyDetail($emergencyDetailsValidatedData);
+                if($check_existing_emergency)
+                {
+                    $emergencyDatas = [
+                        'name' => $emergencyDetailsValidatedData['emergency_contact_name'],
+                        'contact_no' => $emergencyDetailsValidatedData['emergency_contact_no'],
+                        'address' => $emergencyDetailsValidatedData['emergency_contact_address'],
+                        'relationship' => $emergencyDetailsValidatedData['relationship'],
+                    ];
+
+                    $contact_emergency = $this->emergency_details->updateEmergencyDetail($user_id, $emergencyDatas);
+                }
+                else {
+                    $contact_emergency = $this->emergency_details->createEmergencyDetail($emergencyDetailsValidatedData);
+                }
             }
 
             // Serialize the QR content into a JSON string

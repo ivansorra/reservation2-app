@@ -25,7 +25,7 @@ class UserRepository implements UsersInterface
 
     public function getUsersByName($name)
     {
-        return $this->users->where('name', 'like', '%'.$name.'%')->first();
+        return $this->users->where('name', $name)->first();
     }
 
     public function getUserById($id)
@@ -45,10 +45,11 @@ class UserRepository implements UsersInterface
             $user = $this->users->firstOrCreate(
                 [
                     'membership_id' => $data['membership_id'],
-                    'email_address' => $data['email_address'], // Assuming email is unique for users
+                    'name' => $data['name'], // Assuming name is unique for users
                 ],
                 [
                     'name' => $data['name'],
+                    'email_address' => $data['email_address'],
                     'address' => $data['address'],
                     'birthdate' => isset($data['birthdate']) ? Carbon::parse($data['birthdate'])->format('Y-m-d') : null,
                     'contact_no' => $data['contact_no'],
