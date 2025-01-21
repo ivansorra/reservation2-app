@@ -126,11 +126,12 @@ export default {
             };
 
             try {
-                const response = await axios.get('http://localhost:8000/api/members/show', {
+                // const response = await axios.get('http://localhost:8000/api/members/show', {
+                const response = await axios.get(`${import.meta.env.VITE_APP_URL}/api/members/show`, {
                     params: formData,
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content, // Optional chaining to prevent errors
                     },
                 });
 

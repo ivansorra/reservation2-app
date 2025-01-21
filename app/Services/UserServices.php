@@ -154,7 +154,7 @@ class UserServices
                 else {
                     $userValidatedData['birthdate'] = Carbon::parse($userValidatedData['birthdate'])->format('Y-m-d');
                     // $create_user = $memberExists;
-                    $update_user = $this->userRepository->addUser($user_exists->user_id, $userValidatedData);
+                    $update_user = $this->userRepository->updateUser($user_exists->user_id, $userValidatedData);
                     $create_user = $update_user;
                 }
 

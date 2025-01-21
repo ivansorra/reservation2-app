@@ -86,7 +86,7 @@ export default {
         const fetchRoles = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:8000/api/roles"
+                    `${import.meta.env.VITE_APP_URL}/api/roles`
                 );
                 if (response.data?.data?.data) {
                     roles.value = response.data.data.data;

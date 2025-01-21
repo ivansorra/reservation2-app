@@ -709,7 +709,7 @@ export default {
                 const userRole = infoDetails.role_name;
                 try {
                     const response = await axios.get(
-                        "http://localhost:8000/api/roles/show",
+                        `${import.meta.env.VITE_APP_URL}/api/roles/show`,
                         {
                             params: { role_name: userRole },
                             headers: {
@@ -738,7 +738,7 @@ export default {
             try {
                 // Submit user data
                 const userResponse = await axios.post(
-                    "http://localhost:8000/api/users/create", // Ensure the URL is clean
+                    `${import.meta.env.VITE_APP_URL}/api/users/create`, // Ensure the URL is clean
                     userData, // Pass the data as the body
                     {
                         headers: {
