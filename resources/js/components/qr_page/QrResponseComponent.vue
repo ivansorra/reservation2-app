@@ -133,7 +133,7 @@ export default {
 
         const populateForm = async () => {
             try {
-                const response = await axios.get("http://localhost:8000/api/qr/show",
+                const response = await axios.get(`${import.meta.env.VITE_APP_URL}/api/qr/show`,
                     {
                         parmas: {qr_id: 1},
                         headers: {

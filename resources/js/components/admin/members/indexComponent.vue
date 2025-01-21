@@ -198,7 +198,7 @@ export default {
 
         const fetchMembers = async () => {
             try {
-                const response = await axios.get("http://localhost:8000/api/members");
+                const response = await axios.get(`${import.meta.env.VITE_APP_URL}/api/members`);
 
                 if (response.data && response.data.data && response.data.data.data[0]) {
                     members.value.push(...response.data.data.data);

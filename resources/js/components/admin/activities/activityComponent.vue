@@ -131,7 +131,7 @@ export default {
         const getAllTravelActivities = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:8000/api/travel_activity/"
+                    `${import.meta.env.VITE_APP_URL}/api/travel_activity/`
                 );
                 if (response.data?.data) {
                     console.log(response.data); // Debugging the response

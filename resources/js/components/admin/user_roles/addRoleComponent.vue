@@ -94,7 +94,7 @@ export default {
 
             try {
                 const response = await axios.post(
-                    "http://localhost:8000/api/roles/create",
+                    `${import.meta.env.VITE_APP_URL}/api/roles/create`,
                     { role_name: roleName.value, status: "active" },
                     {
                         headers: {

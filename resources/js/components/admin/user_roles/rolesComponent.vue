@@ -127,7 +127,7 @@ export default {
 
         const deleteRole = async (role) => {
             try {
-                await axios.delete(`http://localhost:8000/api/roles/${role.id}`);
+                await axios.delete(`${import.meta.env.VITE_APP_URL}/api/roles/${role.id}`);
                 roles.value = roles.value.filter((r) => r.id !== role.id);
             } catch (error) {
                 console.error("Error deleting role:", error);

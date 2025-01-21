@@ -114,7 +114,7 @@ export default {
 
             try {
                 const response = await axios.put(
-                    "http://localhost:8000/api/roles/update",
+                    `${import.meta.env.VITE_APP_URL}/api/roles/update`,
                     { role_name: roleName.value, status: userRoleStatus },
                     {
                         headers: {
