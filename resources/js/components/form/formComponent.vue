@@ -464,11 +464,22 @@
                     </div>
 
                     <div class="d-grid">
-                        <button
+                        <!-- <button
                             type="submit"
                             class="bg-transparent hover:bg-blue-500 text-black-700 font-semibold hover:text-blue-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                         >
                             Submit
+                        </button> -->
+                        <button
+                            type="submit"
+                            :disabled="isLoading"
+                            class="relative flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+                            >
+                            <span v-if="!isLoading">Submit</span>
+                            <svg v-if="isLoading" class="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8H4z"></path>
+                            </svg>
                         </button>
                     </div>
 
@@ -585,6 +596,7 @@ export default {
         const altEmail = ref("");
 
         const isAgree = ref(false);
+        const isLoading = ref(false);
         const modalVisible = ref(false); // Track modal visibility
 
         const membershipNo = ref("");
@@ -683,6 +695,9 @@ export default {
         };
 
         const submitForm = async () => {
+            if (isLoading.value) return; // Prevent multiple submissions
+            isLoading.value = true; // Start loading
+
             const userData = {
                 membership_id: infoDetails ? infoDetails.membership_id : null,
                 name: guestFullName.value ? guestFullName.value : fullName.value,
@@ -731,6 +746,7 @@ export default {
                         icon: "error",
                         confirmButtonText: "Close",
                     });
+                    isLoading.value = false; // Stop loading on error
                     return;
                 }
             }
@@ -738,11 +754,11 @@ export default {
             try {
                 // Submit user data
                 const userResponse = await axios.post(
-                    `${import.meta.env.VITE_APP_URL}/api/users/create`, // Ensure the URL is clean
-                    userData, // Pass the data as the body
+                    `${import.meta.env.VITE_APP_URL}/api/users/create`,
+                    userData,
                     {
                         headers: {
-                            "Content-Type": "application/json", // Use JSON to avoid URL-encoded behavior
+                            "Content-Type": "application/json",
                             "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
                         },
                     }
@@ -752,7 +768,7 @@ export default {
                 if (userResponse.status === 200) {
                     Swal.fire({
                         title: "QR Code has been sent",
-                        text: "QR Code has been sent to "+userResponse.data.data.email_address,
+                        text: "QR Code has been sent to " + userResponse.data.data.email_address,
                         icon: "success",
                         confirmButtonText: "Close",
                     }).then(() => {
@@ -769,47 +785,16 @@ export default {
                     });
                 }
             } catch (err) {
-                console.error("Error submitting qr code data:", err);
+                console.error("Error submitting QR code data:", err);
                 Swal.fire({
                     title: "Error",
                     text: "Error generating QR Code: " + err.message,
                     icon: "error",
                     confirmButtonText: "Close",
                 });
+            } finally {
+                isLoading.value = false; // Stop loading
             }
-
-            // if(infoDetails.emergencyContact != {})
-            // {
-            //     const contactDetails = {
-            //         "name": contactEmergencyName.value,
-            //         "contact_no": contactEmergencyNumber.value,
-            //         "address": contactEmergencyAddress.value,
-            //         "relationship": contactEmergencyRelationship.value,
-            //         "user_id": infoDetails.user_id
-            //     };
-
-            //     try {
-            //         const emergencyContactResponse = await axios.put("http://localhost:8000/api/emergency_details/update", contactDetails, {
-            //             headers: {
-            //                 "Content-Type": "application/json", // Use JSON to avoid URL-encoded behavior
-            //                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-            //             },
-            //         })
-
-            //         if(emergencyContactResponse.status === 200)
-            //         {
-            //             console.error("Unexpected response:", userResponse);
-            //         }
-            //     } catch (e) {
-            //         console.error("Error updating emergency details data:", err);
-            //         Swal.fire({
-            //             title: "Error",
-            //             text: "Error updating the emergency contact details: " + err.message,
-            //             icon: "error",
-            //             confirmButtonText: "Close",
-            //         });
-            //     }
-            // }
         };
 
         const isEmailDisabled = computed(() => isAutoFilledEmail.value);
@@ -858,6 +843,7 @@ export default {
             isAddressDisabled,
             isArrivalDisabled,
             isDepartureDisabled,
+            isLoading
         };
     },
 };
