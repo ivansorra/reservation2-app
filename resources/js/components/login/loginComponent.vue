@@ -195,22 +195,26 @@ export default {
                         });
                     }
                 }
-                else {
-                    Swal.fire({
-                        title: "There is a problem connecting to the server.",
-                        text: 'Please contact the administrator',
-                        icon: "error",
-                        confirmButtonText: "Close",
-                    });
-                }
             } catch (error) {
                 if (error.response) {
-                    Swal.fire({
-                        title: "There is a problem connecting to the server.",
-                        text: 'Please contact the administrator',
-                        icon: "error",
-                        confirmButtonText: "Close",
-                    });
+                    if(error.response.status === 503)
+                    {
+                        Swal.fire({
+                            title: "There is a problem connecting to the server.",
+                            text: 'Please contact the administrator',
+                            icon: "error",
+                            confirmButtonText: "Close",
+                        });
+                    }
+                    else if(error.response.status === 500)
+                    {
+                        Swal.fire({
+                            title: "Membership ID does not exist",
+                            text: 'Please contact the administrator',
+                            icon: "error",
+                            confirmButtonText: "Close",
+                        });
+                    }
                     console.error("Error Response Data:", error.response.data);
                     console.error("Error Response Status:", error.response.status);
                     console.error("Error Response Headers:", error.response.headers);
