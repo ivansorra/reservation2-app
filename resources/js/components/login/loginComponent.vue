@@ -108,6 +108,7 @@ import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import dayjs from 'dayjs';
+import Swal from "sweetalert2";
 
 export default {
     setup() {
@@ -137,7 +138,8 @@ export default {
 
                 if (response.data) {
                     // console.log("Response Data:", response.data);
-                    if (response.data.data && Object.keys(response.data.data).length > 0) {
+                    if (response.data.data && Object.keys(response.data.data).length > 0)
+                    {
 
                         const userTypeVal = {};
                         // return response.data.data;
@@ -185,12 +187,30 @@ export default {
                                 break;
                         }
                     } else {
-                        alert("Membership ID does not exist");
+                        Swal.fire({
+                            title: "Membership ID does not exist",
+                            text: 'Please contact the administrator',
+                            icon: "error",
+                            confirmButtonText: "Close",
+                        });
                     }
+                }
+                else {
+                    Swal.fire({
+                        title: "There is a problem connecting to the server.",
+                        text: 'Please contact the administrator',
+                        icon: "error",
+                        confirmButtonText: "Close",
+                    });
                 }
             } catch (error) {
                 if (error.response) {
-                    alert("Membership ID does not exist");
+                    Swal.fire({
+                        title: "There is a problem connecting to the server.",
+                        text: 'Please contact the administrator',
+                        icon: "error",
+                        confirmButtonText: "Close",
+                    });
                     console.error("Error Response Data:", error.response.data);
                     console.error("Error Response Status:", error.response.status);
                     console.error("Error Response Headers:", error.response.headers);
