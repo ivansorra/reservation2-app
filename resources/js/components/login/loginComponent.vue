@@ -3,10 +3,7 @@
         <div class="card" style="width: 40rem; margin-top: 150px">
             <div class="card-body">
                 <div class="col-md-10">
-                    <div class="d-flex align-items-center">
-                        <img v-bind:src="'images/balesin_logo.png'" class="justify-content-center rounded-t-lg h-40 w-110" style="margin-left: 170px;"alt="Image description" />
-                        <!-- <img v-bind:src="'images/christmasbanner.jpg'" class="rounded-t-lg h-25 w-100 me-3 ml-2 mt-1 mb-4" alt="Image description" /> -->
-                    </div>
+                    <img v-bind:src="'images/balesin_logo.png'" class="rounded-t-lg h-40 w-110 ml-auto mr-20 " alt="Image description" />
                 </div>
 
                 <div class="text-center mb-3">
@@ -194,6 +191,14 @@ export default {
                             confirmButtonText: "Close",
                         });
                     }
+                }
+                else {
+                    Swal.fire({
+                        title: "Membership ID does not exist",
+                        text: 'Please contact the administrator',
+                        icon: "error",
+                        confirmButtonText: "Close",
+                    });
                 }
             } catch (error) {
                 if (error.response) {
