@@ -14,127 +14,117 @@
                         <div class="mt-3 divider p-3">
                             <span>Member Details</span>
 
-                            <div class="row mt-2 ml-2">
-                                <div class="flex-1 mb-3">
-                                    <label for="fullName" class="form-label block text-sm font-medium text-gray-700 mb-1"
-                                        >Membership No:</label
-                                    >
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                <!-- Membership Number -->
+                                <div class="w-full">
+                                    <label for="membershipNo" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Membership No:
+                                    </label>
                                     <input
                                         type="text"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         id="membershipNo"
-                                        placeholder="Full Name"
-                                        aria-label="Full Name"
+                                        placeholder="Membership No"
                                         v-model="membershipNo"
                                         :disabled="isDisabled"
-                                        :style="{
-                                            backgroundColor: isDisabled
-                                                ? '#d2d2d2'
-                                                : 'white',
-                                        }"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        :class="{ 'bg-gray-300 dark:bg-gray-600 cursor-not-allowed': isDisabled }"
                                     />
                                 </div>
-                                <div class="flex-1 mb-3">
-                                    <label for="fullName" class="form-label block text-sm font-medium text-gray-700 mb-1"
-                                        >Name of Sponsoring Member</label>
+
+                                <!-- Sponsoring Member -->
+                                <div class="w-full">
+                                    <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Name of Sponsoring Member
+                                    </label>
                                     <input
                                         type="text"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         id="fullName"
                                         placeholder="Full Name"
-                                        aria-label="Full Name"
                                         v-model="fullName"
                                         :disabled="isDisabled"
-                                        :style="{
-                                            backgroundColor: isDisabled
-                                                ? '#d2d2d2'
-                                                : 'white',
-                                        }"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        :class="{ 'bg-gray-300 dark:bg-gray-600 cursor-not-allowed': isDisabled }"
                                     />
                                 </div>
                             </div>
+
                         </div>
                         <div class="mt-3 divider p-3">
-                            <span>Guest Details</span>
+                            <span class="block text-lg font-semibold text-gray-800">Guest Details</span>
 
-                            <div class="row mt-2 ml-2">
-                                <div class="flex-1 mb-3">
-                                    <label for="emailAddress" class="form-label block text-sm font-medium text-gray-700 mb-1"
-                                        >Email Address</label
-                                    >
+                            <!-- First Row -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+                                <!-- Email Address -->
+                                <div class="w-full">
+                                    <label for="emailAddress" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                                     <input
                                         type="email"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         id="emailAddress"
                                         placeholder="Email Address"
                                         aria-label="Email Address"
                                         v-model="emailAddress"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     />
                                 </div>
 
-                                <div class="flex-1 mb-3">
-                                    <label for="guestFullName" class="form-label block text-sm font-medium text-gray-700 mb-1"
-                                        >Full Name</label
-                                    >
+                                <!-- Full Name -->
+                                <div class="w-full">
+                                    <label for="guestFullName" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                                     <input
                                         type="text"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         id="guestFullName"
                                         placeholder="Full Name"
                                         aria-label="Full Name"
                                         v-model="guestFullName"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     />
                                 </div>
 
-                                <div class="flex-1 mb-3">
-                                    <label
-                                        for="contactNumber"
-                                        class="form-label block text-sm font-medium text-gray-700 mb-1"
-                                        >Contact Number</label
-                                    >
+                                <!-- Contact Number -->
+                                <div class="w-full">
+                                    <label for="contactNumber" class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
                                     <input
                                         type="text"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         id="contactNumber"
                                         placeholder="Contact Number"
                                         aria-label="Contact Number"
                                         v-model="contactNumber"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     />
                                 </div>
                             </div>
 
-                            <div class="row mt-2 ml-2">
-                                <div class="flex-1 mb-3">
-                                    <label for="address" class="form-label block text-sm font-medium text-gray-700 mb-1"
-                                        >Address</label
-                                    >
+                            <!-- Second Row -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                <!-- Address -->
+                                <div class="w-full">
+                                    <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
                                     <input
                                         type="text"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         id="address"
                                         placeholder="Address"
                                         aria-label="Address"
                                         v-model="address"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     />
                                 </div>
 
-                                <div class="flex-1 mb-3">
-                                    <label for="birthDate" class="form-label block text-sm font-medium text-gray-700 mb-2">
-                                    Birthday
-                                    </label>
+                                <!-- Birthday with Floating Label -->
+                                <div class="w-full">
+                                    <label for="birthDate" class="block text-sm font-medium text-gray-700 mb-1">Birthday</label>
                                     <div class="relative">
                                         <input
                                             id="birthDate"
                                             type="date"
-                                            class="peer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-3 py-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             v-model="birthDate"
                                             required
+                                            class="peer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-3 py-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         />
                                         <label
                                             for="birthDate"
                                             :class="[
-                                            'absolute text-gray-400 text-sm left-3 transition-all duration-200 ease-in-out bg-gray-50 px-1 dark:bg-gray-700',
-                                            birthDate ? 'top-[-10px] text-blue-500 text-xs' : 'top-2 text-gray-400 text-sm'
+                                                'absolute left-3 transition-all duration-200 ease-in-out bg-gray-50 px-1 dark:bg-gray-700',
+                                                birthDate ? 'top-[-10px] text-blue-500 text-xs' : 'top-2 text-gray-400 text-sm'
                                             ]"
                                         >
                                             Select a date
@@ -148,142 +138,74 @@
                         <div class="mt-3 divider p-3">
                             <span>Personal Details</span>
 
-                            <div class="row mt-2 ml-2">
-                                <div class="flex-1 mb-3">
-                                    <label for="emailAddress" class="form-label block text-sm font-medium text-gray-700 mb-1"
-                                        >Email Address</label
-                                    >
-                                    <input
-                                        type="email"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        id="emailAddress"
-                                        placeholder="Email Address"
-                                        aria-label="Email Address"
-                                        v-model="emailAddress"
-                                        :disabled="isEmailDisabled"
-                                        :style="{
-                                            backgroundColor: isEmailDisabled
-                                                ? '#d2d2d2'
-                                                : 'white',
-                                        }"
-                                    />
+                            <!-- Grid Layout -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2 ml-2">
+                                <div class="w-full">
+                                    <label for="fullName" class="form-label block text-sm font-medium text-gray-700 mb-1">
+                                        Full Name
+                                    </label>
+                                    <input type="text"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                        id="fullName" placeholder="Full Name" v-model="fullName" :disabled="isFullNameDisabled"
+                                        :style="{ backgroundColor: isFullNameDisabled ? '#d2d2d2' : 'white' }" />
                                 </div>
 
-                                <div class="flex-1 mb-3">
-                                    <label for="fullName" class="form-label block text-sm font-medium text-gray-700 mb-1"
-                                        >Full Name</label
-                                    >
-                                    <input
-                                        type="text"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        id="fullName"
-                                        placeholder="Full Name"
-                                        aria-label="Full Name"
-                                        v-model="fullName"
-                                        :disabled="isFullNameDisabled"
-                                        :style="{
-                                            backgroundColor: isFullNameDisabled
-                                                ? '#d2d2d2'
-                                                : 'white',
-                                        }"
-                                    />
+                                <div class="w-full">
+                                    <label for="emailAddress" class="form-label block text-sm font-medium text-gray-700 mb-1">
+                                        Email Address
+                                    </label>
+                                    <input type="email"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                        id="emailAddress" placeholder="Email Address" v-model="emailAddress" :disabled="isEmailDisabled"
+                                        :style="{ backgroundColor: isEmailDisabled ? '#d2d2d2' : 'white' }" />
                                 </div>
 
-                                <div class="flex-1 mb-3">
-                                    <label
-                                        for="contactNumber"
-                                        class="form-label block text-sm font-medium text-gray-700 mb-1"
-                                        >Contact Number</label
-                                    >
-                                    <input
-                                        type="text"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        id="contactNumber"
-                                        placeholder="Contact Number"
-                                        aria-label="Contact Number"
-                                        v-model="contactNumber"
-                                        :disabled="isContactDisabled"
-                                        :style="{
-                                            backgroundColor: isContactDisabled
-                                                ? '#d2d2d2'
-                                                : 'white',
-                                        }"
-                                    />
+                                <div class="w-full">
+                                    <label for="contactNumber" class="form-label block text-sm font-medium text-gray-700 mb-1">
+                                        Contact Number
+                                    </label>
+                                    <input type="text"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                        id="contactNumber" placeholder="Contact Number" v-model="contactNumber" :disabled="isContactDisabled"
+                                        :style="{ backgroundColor: isContactDisabled ? '#d2d2d2' : 'white' }" />
                                 </div>
                             </div>
 
-                            <div class="row mt-2 ml-2">
-                                <div class="flex-1 mb-3">
-                                    <label for="address" class="form-label block text-sm font-medium text-gray-700 mb-1"
-                                        >Address</label
-                                    >
-                                    <input
-                                        type="text"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        id="address"
-                                        placeholder="Address"
-                                        aria-label="Address"
-                                        v-model="address"
-                                        :disabled="isAddressDisabled"
-                                        :style="{
-                                            backgroundColor: isAddressDisabled
-                                                ? '#d2d2d2'
-                                                : 'white',
-                                        }"
-                                    />
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2 ml-2">
+                                <div class="w-full">
+                                    <label for="address" class="form-label block text-sm font-medium text-gray-700 mb-1">
+                                        Address
+                                    </label>
+                                    <input type="text"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                        id="address" placeholder="Address" v-model="address" :disabled="isAddressDisabled"
+                                        :style="{ backgroundColor: isAddressDisabled ? '#d2d2d2' : 'white' }" />
                                 </div>
 
-                                <div class="flex-1 mb-3">
-                                    <label for="birthDate" class="form-label block text-sm font-medium text-gray-700 mb-1"
-                                        >Birth Date</label
-                                    >
-                                    <div class="position-relative">
-                                        <div
-                                            class="position-absolute inset-y-0 start-0 d-flex align-items-center ps-3"
-                                        >
-                                            <svg
-                                                class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 20 20"
-                                            >
-                                                <path
-                                                    d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <input
-                                            datepicker
-                                            id="birthDate"
-                                            type="text"
-                                            class="form-control bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Select date"
-                                            v-model="birthDate"
-                                            :disabled="isBirthDateDisabled"
-                                            :style="{
-                                                backgroundColor: isBirthDateDisabled
-                                                    ? '#d2d2d2'
-                                                    : 'white',
-                                            }"
-                                        />
-                                    </div>
+                                <div class="w-full">
+                                    <label for="birthDate" class="form-label block text-sm font-medium text-gray-700 mb-1">
+                                        Birth Date
+                                    </label>
+                                    <input type="text"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                        id="birthDate" placeholder="Select date" v-model="birthDate" :disabled="isBirthDateDisabled"
+                                        :style="{ backgroundColor: isBirthDateDisabled ? '#d2d2d2' : 'white' }" />
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="text-center mt-4" v-if="userType === 'member'">
                         <h1 class="text-lg font-semibold">Please fill in</h1>
                     </div>
+
                     <div class="mt-3 divider p-3">
                         <span>Flight Dates</span>
 
-                        <div class="row mt-2 ml-2 flex gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                             <!-- Arrival Date -->
-                            <div class="flex-1 mb-3">
-                                <label for="travelStart" class="form-label block text-sm font-medium text-gray-700 mb-1">
-                                Arrival Date
-                                </label>
+                            <div class="w-full">
+                                <label for="travelStart" class="block text-sm font-medium text-gray-700 mb-3">Arrival Date</label>
                                 <div class="relative">
                                     <input
                                         id="travelStart"
@@ -292,11 +214,12 @@
                                         v-model="travelStart"
                                         required
                                     />
+                                    <!-- Floating Label -->
                                     <label
                                         for="travelStart"
                                         :class="[
-                                        'absolute text-gray-400 text-sm left-3 transition-all duration-200 ease-in-out bg-gray-50 px-1 dark:bg-gray-700',
-                                        travelStart ? 'top-[-10px] text-blue-500 text-xs' : 'top-2 text-gray-400 text-sm'
+                                            'absolute left-3 transition-all duration-200 ease-in-out bg-gray-50 px-1 dark:bg-gray-700',
+                                            travelStart ? 'top-[-10px] text-black-500 text-xs' : 'top-2 text-gray-400 text-sm'
                                         ]"
                                     >
                                         Select a date
@@ -305,10 +228,8 @@
                             </div>
 
                             <!-- Departure Date -->
-                            <div class="flex-1 mb-3">
-                                <label for="travelEnd" class="form-label block text-sm font-medium text-gray-700 mb-1">
-                                Departure Date
-                                </label>
+                            <div class="w-full">
+                                <label for="travelEnd" class="block text-sm font-medium text-gray-700 mb-3">Departure Date</label>
                                 <div class="relative">
                                     <input
                                         id="travelEnd"
@@ -317,11 +238,12 @@
                                         v-model="travelEnd"
                                         required
                                     />
+                                    <!-- Floating Label -->
                                     <label
                                         for="travelEnd"
                                         :class="[
-                                        'absolute text-gray-400 text-sm left-3 transition-all duration-200 ease-in-out bg-gray-50 px-1 dark:bg-gray-700',
-                                        travelEnd ? 'top-[-10px] text-blue-500 text-xs' : 'top-2 text-gray-400 text-sm'
+                                            'absolute left-3 transition-all duration-200 ease-in-out bg-gray-50 px-1 dark:bg-gray-700',
+                                            travelEnd ? 'top-[-10px] text-black-500 text-xs' : 'top-2 text-gray-400 text-sm'
                                         ]"
                                     >
                                         Select a date
@@ -331,11 +253,12 @@
                         </div>
                     </div>
                     <div class="mt-3 divider p-3">
-                        <span>In Case of Emergency</span>
+                        <span class="text-lg font-semibold">In Case of Emergency</span>
 
-                        <div class="row mt-2">
-                            <div class="flex-1 mb-3 ml-5">
-                                <label for="emergencyName" class="form-label block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                            <!-- Name -->
+                            <div class="w-full">
+                                <label for="emergencyName" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
                                 <input
                                     type="text"
                                     id="emergencyName"
@@ -346,23 +269,9 @@
                                 />
                             </div>
 
-                            <div class="col-md-3 mb-3">
-                                <label for="emergencyContact" class="form-label block text-sm font-medium text-gray-700 mb-1"
-                                    >Contact Number</label
-                                >
-                                <input
-                                    type="tel"
-                                    id="emergencyContact"
-                                    name="emergencyContact"
-                                    v-model="contactEmergencyNumber"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                />
-                            </div>
-
-                            <div class="flex-1 mb-3">
-                                <label for="emergencyAddress" class="form-label block text-sm font-medium text-gray-700 mb-1"
-                                    >Address</label
-                                >
+                            <!-- Address -->
+                            <div class="w-full">
+                                <label for="emergencyAddress" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
                                 <input
                                     type="text"
                                     id="emergencyAddress"
@@ -372,41 +281,39 @@
                                 />
                             </div>
 
-                            <div class="flex-1 mb-3">
-                                <label for="relationship" class="form-label block text-sm font-medium text-gray-700 mb-1"
-                                    >Relationship</label
-                                >
+                            <!-- Contact Number -->
+                            <div class="w-full">
+                                <label for="emergencyContact" class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                                <input
+                                    type="tel"
+                                    id="emergencyContact"
+                                    name="emergencyContact"
+                                    v-model="contactEmergencyNumber"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                />
+                            </div>
+
+                            <!-- Relationship -->
+                            <div class="w-full">
+                                <label for="relationship" class="block text-sm font-medium text-gray-700 mb-1">Relationship</label>
                                 <select
                                     id="relationship"
                                     name="relationship"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    v-model="
-                                        contactEmergencyRelationship
-                                    "
+                                    v-model="contactEmergencyRelationship"
                                 >
                                     <option value="">Select</option>
-                                    <option value="father">
-                                        Father
-                                    </option>
-                                    <option value="mother">
-                                        Mother
-                                    </option>
-                                    <option value="brother">
-                                        Brother
-                                    </option>
-                                    <option value="sister">
-                                        Sister
-                                    </option>
-                                    <option value="spouse">
-                                        Spouse
-                                    </option>
-                                    <option value="others">
-                                        Others
-                                    </option>
+                                    <option value="father">Father</option>
+                                    <option value="mother">Mother</option>
+                                    <option value="brother">Brother</option>
+                                    <option value="sister">Sister</option>
+                                    <option value="spouse">Spouse</option>
+                                    <option value="others">Others</option>
                                 </select>
                             </div>
                         </div>
                     </div>
+
                     <div class="mt-3 divider p-3">
                         <span>Email QR Code</span>
                         <div class="p-3">
@@ -459,7 +366,8 @@
                         />
                         <label for="waiver">
                         I agree to the
-                        <a href="javascript:void(0)" @click="showWaiverModal">Release and Waiver of Liability</a>
+                        <a href="javascript:void(0)" class="text-blue-500 underline hover:text-blue-500 hover:font-bold hover:scale-105 transition duration-300" @click="showWaiverModal">Release and Waiver of Liability.</a>
+
                         </label>
                     </div>
 
@@ -671,6 +579,7 @@ export default {
             if (type === "sameAsEmail") {
                 if (sameAsEmail.value) {
                     isAlternateChecked.value = false;
+                    altEmail.value = "";
                 }
             } else if (type === "isAlternateChecked") {
                 if (isAlternateChecked.value) {

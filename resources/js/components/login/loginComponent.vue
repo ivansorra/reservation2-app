@@ -2,9 +2,7 @@
     <div class="row justify-content-md-center">
         <div class="card" style="width: 40rem; margin-top: 150px">
             <div class="card-body">
-                <div class="col-md-10">
-                    <img v-bind:src="'images/balesin_logo.png'" class="rounded-t-lg h-40 w-110 ml-auto mr-20 " alt="Image description" />
-                </div>
+                <img v-bind:src="'images/balesin_logo.png'" class="rounded-t-lg h-40 w-110 ml-auto mr-auto" alt="Image description" />
 
                 <div class="text-center mb-3">
                     <h1 class="text-lg font-semibold">Balesin QR Form</h1>
@@ -247,10 +245,6 @@ export default {
             return `${month}-${day}-${year}`;
         };
 
-        // const imageUrl = computed(() => {
-        //     return `http://localhost:8000/public/storage/images/balesinbanner.jpg`;
-        // });
-
         return {
             userType,
             membership_no,
@@ -266,5 +260,5 @@ export default {
 </script>
 
 <style>
-/* Customize the styles as needed */
+
 </style>
