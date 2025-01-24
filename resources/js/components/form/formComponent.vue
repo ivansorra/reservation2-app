@@ -3,8 +3,7 @@
         <div class="row justify-content-center max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-lg">
             <img
                 v-bind:src="'images/balesin_logo.png'"
-                style="width: 45%"
-                class="rounded-t-lg mb-3"
+                class="rounded-t-lg w-80 ml-auto mr-auto"
                 alt="Image description"
             />
             <!-- <h5 class="text-md dark:text-white mb-2 ml-4"><strong>Hello, <span class="text-md font-bold text-blue-500 lg:text-xl dark:text-blue-400">{{ fullName }}</span>! To reserve a flight, please complete the form below to get started.</strong></h5> -->
