@@ -163,8 +163,24 @@
                         <td class="px-6 py-4">{{ new Date(res.user_info.birthdate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}}</td>
                         <td class="px-6 py-4">{{ Array.isArray(res.travel_info) ? res.travel_info.map(flight => flight.arrival_date).join("") : null }}</td>
                         <td class="px-6 py-4">{{ Array.isArray(res.travel_info) ? res.travel_info.map(flight => flight.return_date).join("") : null }}</td>
-                        <td class="px-6 py-4">
-                            <img v-bind:src="res.qr_url" alt="">
+                        <td class="px-6 py-4 relative">
+                            <div class="relative inline-block">
+                                <!-- QR Code Image -->
+                                <img v-bind:src="res.qr_url" alt="QR Code" class="block w-24 h-24">
+
+                                <!-- Overlay Button -->
+                                <div
+                                    class="absolute inset-0 flex items-center justify-center"
+                                >
+                                    <button
+                                        class="bg-gray-500 text-white px-6 py-2 rounded-sm shadow-sm
+                                        opacity-80 hover:opacity transition-opacity"
+                                        @click="resendQrCode(res.qr_url)"
+                                    >
+                                        Resend
+                                    </button>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </tbody>

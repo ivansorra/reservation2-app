@@ -24,6 +24,17 @@ trait APIRequestTrait
                 'memid' => $request->get('membership_no'), // Query parameter
             ]);
 
+            // dd($response->status());
+
+            if($response->status() === 503)
+            {
+                return response()->json([
+                    "success" => false,
+                    "message" => 'There is a problem connecting to the server.',
+                    "server_response" => 'error'
+                ], 503);
+            }
+
             $results = [];
 
             // dd($response);
@@ -45,8 +56,8 @@ trait APIRequestTrait
                     "relation" => $json_response['relation']
                 ];
 
-                return $results;
-                // return $this->successResponse($response->json()['msg'][0], 'Successfully fetched data', $response->status());
+                // return $results;
+                return $this->successResponse($results, 'Successfully fetched data', $response->status());
             }
             else {
                 return response()->json([

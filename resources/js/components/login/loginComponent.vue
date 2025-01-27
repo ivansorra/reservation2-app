@@ -87,6 +87,12 @@
                         />
                     </div>
 
+                    <div v-if="responseMessage" class="mb-3">
+                        <div class="bg-red-100 border border-red-500 text-red-700 px-4 py-2 rounded">
+                            <strong>Error:</strong> {{ responseMessage }}
+                        </div>
+                    </div>
+
                     <div class="mb-3 d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary">
                             Submit
@@ -112,6 +118,7 @@ export default {
         const primaryMemberID = ref("");
         const sponsoringMemberID = ref("");
         const validateDepedent = ref("");
+        const responseMessage = ref("");
 
         const router = useRouter();
 
@@ -192,19 +199,21 @@ export default {
                     console.error("Error Response Headers:", error.response.headers);
 
                     if (error.response.status === 503) {
-                        Swal.fire({
-                            title: "Server Unavailable",
-                            text: "There is a problem connecting to the server. Please contact the administrator.",
-                            icon: "error",
-                            confirmButtonText: "Close",
-                        });
+                        // Swal.fire({
+                        //     title: "Service Unavailable",
+                        //     text: "There is a problem connecting to the server. Please contact the administrator.",
+                        //     icon: "error",
+                        //     confirmButtonText: "Close",
+                        // });
+                        responseMessage.value = "There is a problem connecting to the Intimus API Service. Please contact the administrator."
                     } else if (error.response.status === 500) {
-                        Swal.fire({
-                            title: "Membership ID not found",
-                            text: "An unexpected error occurred. Please contact the administrator.",
-                            icon: "error",
-                            confirmButtonText: "Close",
-                        });
+                        // Swal.fire({
+                        //     title: "Membership ID not found",
+                        //     text: "An unexpected error occurred. Please contact the administrator.",
+                        //     icon: "error",d
+                        //     confirmButtonText: "Close"
+                        // });
+                        responseMessage.value = "Membership ID not found. Please contact the administrator."
                     } else {
                         Swal.fire({
                             title: `Error ${error.response.status}`,
@@ -216,21 +225,23 @@ export default {
                 } else if (error.request) {
                     // Request was made but no response received
                     console.error("Error Request:", error.request);
-                    Swal.fire({
-                        title: "Network Error",
-                        text: "No response from server. Please check your internet connection or try again later.",
-                        icon: "error",
-                        confirmButtonText: "Close",
-                    });
+                    // Swal.fire({
+                    //     title: "Network Error",
+                    //     text: "No response from server. Please check your internet connection or try again later.",
+                    //     icon: "error",
+                    //     confirmButtonText: "Close",
+                    // });
+                    responseMessage.value = "No response from server. Please check your internet connection or try again later."
                 } else {
                     // Something else went wrong
                     console.error("Error Message:", error.message);
-                    Swal.fire({
-                        title: "Unexpected Error",
-                        text: "An error occurred. Please try again later.",
-                        icon: "error",
-                        confirmButtonText: "Close",
-                    });
+                    // Swal.fire({
+                    //     title: "Unexpected Error",
+                    //     text: "An error occurred. Please try again later.",
+                    //     icon: "error",
+                    //     confirmButtonText: "Close",
+                    // });
+                    responseMessage.value = "An error occurred. Please try again later."
                 }
             }
         };
@@ -257,7 +268,8 @@ export default {
             sponsoringMemberID,
             updateUserType,
             reservationForm,
-            validateDepedent
+            validateDepedent,
+            responseMessage
             // imageUrl
         };
     },
