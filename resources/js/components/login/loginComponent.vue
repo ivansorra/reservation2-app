@@ -94,8 +94,19 @@
                     </div>
 
                     <div class="mb-3 d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary">
+                        <!-- <button type="submit" class="btn btn-primary">
                             Submit
+                        </button> -->
+                        <button
+                            type="submit"
+                            :disabled="isLoading"
+                            class="relative flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+                            >
+                            <span v-if="!isLoading">Submit</span>
+                            <svg v-if="isLoading" class="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8H4z"></path>
+                            </svg>
                         </button>
                     </div>
                 </form>
@@ -119,6 +130,7 @@ export default {
         const sponsoringMemberID = ref("");
         const validateDepedent = ref("");
         const responseMessage = ref("");
+        const isLoading = ref(false);
 
         const router = useRouter();
 
@@ -127,6 +139,9 @@ export default {
                 membership_no: membership_no.value,
                 mem_type: userType.value
             };
+
+            if (isLoading.value) return; // Prevent multiple submissions
+            isLoading.value = true; // Start loading
 
             try {
                 // const response = await axios.get('http://localhost:8000/api/members/show', {
@@ -215,12 +230,13 @@ export default {
                         // });
                         responseMessage.value = "Membership ID not found. Please contact the administrator."
                     } else {
-                        Swal.fire({
-                            title: `Error ${error.response.status}`,
-                            text: error.response.data?.message || "An unknown error occurred.",
-                            icon: "error",
-                            confirmButtonText: "Close",
-                        });
+                        // Swal.fire({
+                        //     title: `Error ${error.response.status}`,
+                        //     text: error.response.data?.message || "An unknown error occurred.",
+                        //     icon: "error",
+                        //     confirmButtonText: "Close",
+                        // });
+                        responseMessage.value = "An error occurred. Please try again later."
                     }
                 } else if (error.request) {
                     // Request was made but no response received
@@ -243,6 +259,8 @@ export default {
                     // });
                     responseMessage.value = "An error occurred. Please try again later."
                 }
+            } finally {
+                isLoading.value = false; // Ensure loading state resets
             }
         };
 
@@ -269,7 +287,8 @@ export default {
             updateUserType,
             reservationForm,
             validateDepedent,
-            responseMessage
+            responseMessage,
+            isLoading
             // imageUrl
         };
     },
