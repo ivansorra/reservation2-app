@@ -181,53 +181,58 @@ export default {
                                 console.warn("Unknown userType value:", userType.value);
                                 break;
                         }
+                    }
+                }
+
+            } catch (error) {
+                if (error.response) {
+                    // Server responded with a status code outside the 2xx range
+                    console.error("Error Response Data:", error.response.data);
+                    console.error("Error Response Status:", error.response.status);
+                    console.error("Error Response Headers:", error.response.headers);
+
+                    if (error.response.status === 503) {
+                        Swal.fire({
+                            title: "Server Unavailable",
+                            text: "There is a problem connecting to the server. Please contact the administrator.",
+                            icon: "error",
+                            confirmButtonText: "Close",
+                        });
+                    } else if (error.response.status === 500) {
+                        Swal.fire({
+                            title: "Membership ID not found",
+                            text: "An unexpected error occurred. Please contact the administrator.",
+                            icon: "error",
+                            confirmButtonText: "Close",
+                        });
                     } else {
                         Swal.fire({
-                            title: "Membership ID does not exist",
-                            text: 'Please contact the administrator',
+                            title: `Error ${error.response.status}`,
+                            text: error.response.data?.message || "An unknown error occurred.",
                             icon: "error",
                             confirmButtonText: "Close",
                         });
                     }
-                }
-                else {
+                } else if (error.request) {
+                    // Request was made but no response received
+                    console.error("Error Request:", error.request);
                     Swal.fire({
-                        title: "Membership ID does not exist",
-                        text: 'Please contact the administrator',
+                        title: "Network Error",
+                        text: "No response from server. Please check your internet connection or try again later.",
+                        icon: "error",
+                        confirmButtonText: "Close",
+                    });
+                } else {
+                    // Something else went wrong
+                    console.error("Error Message:", error.message);
+                    Swal.fire({
+                        title: "Unexpected Error",
+                        text: "An error occurred. Please try again later.",
                         icon: "error",
                         confirmButtonText: "Close",
                     });
                 }
-            } catch (error) {
-                if (error.response) {
-                    if(error.response.status === 503)
-                    {
-                        Swal.fire({
-                            title: "There is a problem connecting to the server.",
-                            text: 'Please contact the administrator',
-                            icon: "error",
-                            confirmButtonText: "Close",
-                        });
-                    }
-                    else if(error.response.status === 500)
-                    {
-                        Swal.fire({
-                            title: "Membership ID does not exist",
-                            text: 'Please contact the administrator',
-                            icon: "error",
-                            confirmButtonText: "Close",
-                        });
-                    }
-                    console.error("Error Response Data:", error.response.data);
-                    console.error("Error Response Status:", error.response.status);
-                    console.error("Error Response Headers:", error.response.headers);
-                } else if (error.request) {
-                    console.error("Error Request:", error.request);
-                } else {
-                    console.error("Error Message:", error.message);
-                }
             }
-
         };
 
         const updateUserType = () => {

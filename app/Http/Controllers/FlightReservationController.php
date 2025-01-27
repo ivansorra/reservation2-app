@@ -23,8 +23,15 @@ class FlightReservationController extends Controller
 
     public function show(Request $request)
     {
-        return $this->reservation->getReservationId($request);
+        if($request->has('name'))
+        {
+            return $this->reservation->searchUsersReservation($request);
+        }
+        else {
+            return $this->reservation->getReservationId($request);
+        }
     }
+
 
     public function store(Request $request, FlightReservationRequest $reservationReq)
     {

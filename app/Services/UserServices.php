@@ -269,6 +269,7 @@ class UserServices
 
                 $qrPublicUrl = $result['ObjectURL'];
 
+                $update_qrcode = $this->qr_code->updateQrCode($create_qr->qr_id, $qrPublicUrl);
             } catch (AwsException $e) {
                 dd('Error uploading to S3: ' . $e->getMessage());
             }

@@ -15,4 +15,9 @@ class FlightReservation extends Model
         'arrival_date',
         'return_date',
     ];
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

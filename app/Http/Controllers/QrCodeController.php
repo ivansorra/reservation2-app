@@ -6,14 +6,23 @@ use App\Models\FlightReservation;
 use Illuminate\Http\Request;
 use App\Models\QrCodes;
 
+use App\Services\QrCodeServices;
+
 class QrCodeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+    private $qrCode;
+
+    public function __construct(QrCodeServices $qrCodeServices)
     {
-        return view('qrResponseView');
+        $this->qrCode = $qrCodeServices;
+    }
+    public function index(Request $request)
+    {
+        return $this->qrCode->getUserQrCodes($request);
     }
 
     /**

@@ -12,7 +12,7 @@
                         @click="toggleMembersDropdown"
                         class="flex justify-between items-center w-full p-2 text-left text-gray-700 hover:bg-gray-200 focus:outline-none"
                     >
-                        Membership
+                        Users
                         <svg
                             :class="membershipdropdownOpen ? 'transform rotate-180' : ''"
                             class="w-4 h-4 transition-transform duration-200"
@@ -34,13 +34,17 @@
                         class="bg-gray-100 border-l border-b border-r mt-1"
                     >
                         <router-link
+                            to="/admin/users"
+                            class="block p-2 text-gray-700 hover:bg-gray-200"
+                        >Users</router-link>
+                        <router-link
                             to="/admin/membership"
                             class="block p-2 text-gray-700 hover:bg-gray-200"
-                        >Manage Members</router-link>
+                        >Members</router-link>
                         <router-link
                             to="/admin/roles"
                             class="block p-2 text-gray-700 hover:bg-gray-200"
-                        >Manage Roles</router-link>
+                        >Roles</router-link>
                     </ul>
                 </li>
 
@@ -71,7 +75,7 @@
                         class="bg-gray-100 border-l border-b border-r mt-1"
                     >
                         <router-link
-                            to="/admin/membership"
+                            to="/admin/reservations"
                             class="block p-2 text-gray-700 hover:bg-gray-200"
                         >Manage Reservations</router-link>
                         <router-link

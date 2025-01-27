@@ -43,6 +43,19 @@ class FlightReservationServices
         }
     }
 
+    public function searchUsersReservation(Request $request)
+    {
+        try {
+            $user_name = $request->get('name');
+
+            $get_reservations = $this->reservation->searchReservationByName($user_name);
+
+            return $this->successResponse($get_reservations, 'Successfully retrieved reservations for user', 200);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e, 'Error', 400);
+        }
+    }
+
     public function getReservationId(Request $request)
     {
         try {

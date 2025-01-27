@@ -26,7 +26,7 @@ class QrCodeRepository implements QrCodeInterface
 
     public function getQrCodes($perPage = 10)
     {
-        return $this->qrcode->paginate($perPage);
+        return $this->qrcode->with('travel')->paginate($perPage);
     }
     public function getQrCode($id)
     {
@@ -35,6 +35,10 @@ class QrCodeRepository implements QrCodeInterface
     public function generateQrCode($data)
     {
         return $this->qrcode->create($data);
+    }
+    public function updateQrCode($id, $url)
+    {
+        return $this->qrcode->where('qr_id', $id)->update(['qr_url' => $url]);
     }
     public function deleteQrCode($id)
     {

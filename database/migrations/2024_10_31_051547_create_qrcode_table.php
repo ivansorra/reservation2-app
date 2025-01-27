@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('travel_id');
             $table->foreign('travel_id')->references('travel_id')->on('flight_reservation');
             $table->string('qr_content');
+            $table->string('qr_url')->nullable();
             $table->date('qr_expiration_start');
             $table->date('qr_expiration_end');
             $table->boolean('is_active');

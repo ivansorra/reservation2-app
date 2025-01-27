@@ -11,7 +11,7 @@
             <h2
                 class="mt-1 text-center text-2xl/9 font-bold tracking-tight text-gray-900"
             >
-                Administrator
+                Create an Admin Account
             </h2>
         </div>
 
@@ -67,18 +67,8 @@
                         type="submit"
                         class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
-                        Sign in
+                        Register
                     </button>
-                </div>
-
-                <div>
-                    <p class="mt-6 text-center text-sm/6 text-gray-500">
-                        Don't have an account?
-                        <router-link
-                            to="/register"
-                            class="font-semibold text-indigo-600 hover:text-indigo-500"
-                        >Sign up</router-link>
-                    </p>
                 </div>
             </form>
         </div>
@@ -90,7 +80,7 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 
 export default {
-    name: "adminLoginComponent",
+    name: "adminRegisterComponent",
     setup() {
 
     },
