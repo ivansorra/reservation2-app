@@ -102,12 +102,12 @@ class MembershipServices
                     'name' => $responseData['data']['member_name'] ?? null,
                     'address' => $responseData['data']['address']['address'],
                     'email_address' => $responseData['data']['member_email'],
-                    'birthdate' => Carbon::parse($responseData['data']['birthday'])->format('m-d-Y'),
+                    // 'birthdate' => Carbon::parse($responseData['data']['birthday'])->format('Y-m-d'),
+                    'birthdate' => $responseData['data']['birthdate'],
                     'contact_no' => $responseData['data']['phone_number'],
                     'user_status' => true,
                 ];
 
-                // dd($usersValidatedData);
                 $getExistingMember = $this->membershipRepository->getMembershipNo($responseData['data']['member_number']);
 
                 if ($getExistingMember) {

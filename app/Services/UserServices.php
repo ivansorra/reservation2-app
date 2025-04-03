@@ -152,7 +152,10 @@ class UserServices
                     // dd($create_user);
                 }
                 else {
-                    $userValidatedData['birthdate'] = Carbon::parse($userValidatedData['birthdate'])->format('Y-m-d');
+                    // dd($userValidatedData);
+
+                    $userValidatedData['birthdate'] = Carbon::createFromFormat('m-d-Y', $userValidatedData['birthdate'])->format('Y-m-d');
+                    // $userValidatedData['birthdate'] = Carbon::parse($userValidatedData['birthdate'])->format('Y-m-d');
                     // $create_user = $memberExists;
                     $update_user = $this->userRepository->updateUser($user_exists->user_id, $userValidatedData);
                     $create_user = $update_user;
@@ -182,7 +185,6 @@ class UserServices
             {
                 $travel_id = $request->get('travel_id');
                 $create_reservation = $this->reservation->getReservation($travel_id);
-
                 if($create_reservation)
                 {
                     $update_flight_dates = $this->reservation->updateReservation($user_id, $reservationValidatedData);
@@ -244,6 +246,7 @@ class UserServices
                 : Carbon::parse($reservationValidatedData['arrival_date'])->toFormattedDateString();
 
             $filename = $create_user->name . '-' . $duration . '.png';
+
             $qrPath = 'qr_codes/' . $filename;
 
             $s3Client = new S3Client([

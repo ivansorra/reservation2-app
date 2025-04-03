@@ -40,7 +40,6 @@ trait APIRequestTrait
             // dd($response);
             if ($response->successful() && $response->json()['msg'] != []) {
                 $json_response = $response->json()['msg'][0];
-
                 $results = [
                     "member_number" => $json_response['memberNo'],
                     "member_name" => $json_response['memberName'],
@@ -48,8 +47,8 @@ trait APIRequestTrait
                     "activation_date" => $json_response['ActivDt'],
                     "member_email" => $json_response['email'],
                     "address" => $json_response['address'][0],
-                    "phone_number" => $json_response['phones'][0],
-                    "birthday" => $json_response['birthDate'],
+                    "phone_number" =>  ltrim(intval($json_response['phones'][0]), '+'),
+                    "birthdate" => $json_response['birthDate'],
                     "confirmation_no" => $json_response['nextConfNo'],
                     "arrival_date" => $json_response['nextArrDt'],
                     "return_date" => $json_response['nextDepDt'],
