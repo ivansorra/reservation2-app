@@ -40,6 +40,7 @@ trait APIRequestTrait
             // dd($response);
             if ($response->successful() && $response->json()['msg'] != []) {
                 $json_response = $response->json()['msg'][0];
+
                 $results = [
                     "member_number" => $json_response['memberNo'],
                     "member_name" => $json_response['memberName'],

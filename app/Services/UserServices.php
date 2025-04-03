@@ -152,11 +152,8 @@ class UserServices
                     // dd($create_user);
                 }
                 else {
-                    // dd($userValidatedData);
-
                     $userValidatedData['birthdate'] = Carbon::createFromFormat('m-d-Y', $userValidatedData['birthdate'])->format('Y-m-d');
                     // $userValidatedData['birthdate'] = Carbon::parse($userValidatedData['birthdate'])->format('Y-m-d');
-                    // $create_user = $memberExists;
                     $update_user = $this->userRepository->updateUser($user_exists->user_id, $userValidatedData);
                     $create_user = $update_user;
                 }
@@ -245,7 +242,7 @@ class UserServices
                 ? Carbon::parse($reservationValidatedData['arrival_date'])->toFormattedDateString() . ' to ' . Carbon::parse($reservationValidatedData['return_date'])->toFormattedDateString()
                 : Carbon::parse($reservationValidatedData['arrival_date'])->toFormattedDateString();
 
-            $filename = $create_user->name . '-' . $duration . '.png';
+            $filename = $create_user->name . '-' . $duration . '-'. time() . '.png';
 
             $qrPath = 'qr_codes/' . $filename;
 

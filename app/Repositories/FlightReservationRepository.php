@@ -48,8 +48,8 @@ class FlightReservationRepository implements FlightReservationInterface
     {
         $travel_reservation = $this->reservation->firstOrCreate([
             'user_id' => $data['user_id'],
-            'arrival_date' => Carbon::parse($data['arrival_date'])->format('m-d-Y'),
-            'return_date' => Carbon::parse($data['return_date'])->format('m-d-Y'),
+            'arrival_date' => Carbon::parse($data['arrival_date'])->format('Y-m-d'),
+            'return_date' => Carbon::parse($data['return_date'])->format('Y-m-d'),
         ]);
 
         return $travel_reservation;

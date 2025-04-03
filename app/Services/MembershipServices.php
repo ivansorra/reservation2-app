@@ -75,112 +75,88 @@ class MembershipServices
     {
         try {
             $get_member_id = $this->get_intimus_members($request);
-            $decodedResponse = $get_member_id->getStatusCode(true);
+            $responseData = $get_member_id->getData(true);
 
-            if ($decodedResponse === 200) {
-                $responseData = $get_member_id->getData(true);
-                $membersValidatedData = [
-                    'membership_no' => $responseData['data']['member_number'] ?? null,
-                    'mem_type' => null,
-                    // 'arrivalDate' => $get_member_id['nextArrDt'] ?? null,
-                    'status' => true,
-                ];
-
-                if($responseData['data']['relation'] === "DESCENDANTS")
-                {
-                    $membersValidatedData['mem_type'] = $responseData['data']['relation'];
-                    return response()->json([
-                        'success' => false,
-                        'data' => $membersValidatedData,
-                        'message' => "You're a descendant. Kindly proceed as guest to continue"
-                    ]);
-                }
-
-                $membersValidatedData['mem_type'] = $request->get('mem_type');
-
-                $usersValidatedData = [
-                    'name' => $responseData['data']['member_name'] ?? null,
-                    'address' => $responseData['data']['address']['address'],
-                    'email_address' => $responseData['data']['member_email'],
-                    // 'birthdate' => Carbon::parse($responseData['data']['birthday'])->format('Y-m-d'),
-                    'birthdate' => $responseData['data']['birthdate'],
-                    'contact_no' => $responseData['data']['phone_number'],
-                    'user_status' => true,
-                ];
-
-                $getExistingMember = $this->membershipRepository->getMembershipNo($responseData['data']['member_number']);
-
-                if ($getExistingMember) {
-                    $user_id = $getExistingMember['user_id'];
-
-                    $hasEmergencyDetails = $this->emergencyRepository->getEmergencyDetail($user_id);
-
-                    $reservation_exists = $this->reservationRepository->getReservation(null, $user_id);
-
-                    if($hasEmergencyDetails)
-                    {
-                        $getExistingMember['emergencyContact'] = [
-                            'name' => $hasEmergencyDetails['name'],
-                            'address' => $hasEmergencyDetails['address'],
-                            'contact_no' => $hasEmergencyDetails['contact_no'],
-                            'relationship' => $hasEmergencyDetails['relationship'],
-                        ];
-
-                        // $getExistingMember['contactName'] = $hasEmergencyDetails['name'];
-                        // $getExistingMember['contactAddress'] = $hasEmergencyDetails['address'];
-                        // $getExistingMember['contactNumber'] = $hasEmergencyDetails['contact_no'];
-                        // $getExistingMember['contactRelation'] = $hasEmergencyDetails['relationship'];
-                    }
-
-                    if($reservation_exists)
-                    {
-                        $getExistingMember['arrival_date'] = $reservation_exists['arrival_date'];
-                        $getExistingMember['return_date'] = $reservation_exists['return_date'];
-                        $getExistingMember['travel_id'] = $reservation_exists['travel_id'];
-                    }
-
-                    // dd($getExistingMember);
-                    return $this->successResponse($getExistingMember, 'User already exists', 200);
-                } else {
-                    // $currentDate = Carbon::now();
-
-                    // $daysDifference = Carbon::parse($get_member_id['arrival_date'])->diffInDays($currentDate);
-
-                    // if ($daysDifference <= 30) {
-                    $flightReserveReq = [
-                        'arrival_date' => $responseData['data']['arrival_date']  !== "" ? Carbon::parse($responseData['data']['arrival_date'])->format('Y-m-d') : null,
-                        'return_date'  => $responseData['data']['return_date']  !== "" ? Carbon::parse($responseData['data']['return_date'])->format('Y-m-d') : null,
-                    ];
-
-                    $create_member = $this->membershipRepository->createMembership($membersValidatedData, $usersValidatedData, $flightReserveReq);
-                    // } else {
-                    //     $create_member = $this->membershipRepository->createMembership($membersValidatedData, $usersValidatedData, null);
-                    // }
-
-                    // dd($create_member);
-
-                    if ($create_member) {
-                        if($create_member['reservation'] === [])
-                        {
-                            $getExistingMember = $this->membershipRepository->getMembershipNo($responseData['member_number'], null);
-                        }
-                        else {
-                            $getExistingMember = $this->membershipRepository->getMembershipNo($responseData['member_number'], $create_member['reservation']['travel_id']);
-                            $getExistingMember['travel_id'] = $create_member['reservation']['travel_id'];
-                        }
-
-                        return $this->successResponse($getExistingMember, 'Successfully added new member', 200);
-                    }
-
-                    return response()->json([
-                        'success' => false,
-                        'error'   => 'Failed to create new member',
-                    ], 400);
-
-                }
-            }
-            else {
+            // Validate API response structure
+            if (!isset($responseData['data']) || !is_array($responseData['data'])) {
                 return $get_member_id;
+            }
+
+            // Prepare validated data
+            $membersValidatedData = [
+                'membership_no' => $responseData['data']['member_number'],
+                'mem_type' => null,
+                'status' => true,
+            ];
+
+            if ($responseData['data']['relation'] === "DESCENDANTS") {
+                $membersValidatedData['mem_type'] = $responseData['data']['relation'];
+                return response()->json([
+                    'success' => false,
+                    'data' => $membersValidatedData,
+                    'message' => "You're a descendant. Kindly proceed as guest to continue"
+                ]);
+            }
+
+            $membersValidatedData['mem_type'] = $request->get('mem_type');
+
+            $usersValidatedData = [
+                'name' => $responseData['data']['member_name'] ?? null,
+                'address' => $responseData['data']['address']['address'] ?? null,
+                'email_address' => $responseData['data']['member_email'] ?? null,
+                'birthdate' => $responseData['data']['birthdate'] ?? null,
+                'contact_no' => $responseData['data']['phone_number'] ?? null,
+                'user_status' => true,
+            ];
+
+            $getExistingMember = $this->membershipRepository->getMembershipNo($responseData['data']['member_number']);
+
+            if ($getExistingMember) {
+                $user_id = $getExistingMember['user_id'];
+                $hasEmergencyDetails = $this->emergencyRepository->getEmergencyDetail($user_id);
+                $reservation_exists = $this->reservationRepository->getReservation(null, $user_id);
+
+                if ($hasEmergencyDetails) {
+                    $getExistingMember['emergencyContact'] = [
+                        'name' => $hasEmergencyDetails['name'] ?? null,
+                        'address' => $hasEmergencyDetails['address'] ?? null,
+                        'contact_no' => $hasEmergencyDetails['contact_no'] ?? null,
+                        'relationship' => $hasEmergencyDetails['relationship'] ?? null,
+                    ];
+                }
+
+                if ($reservation_exists) {
+                    $getExistingMember['arrival_date'] = $reservation_exists['arrival_date'] ?? null;
+                    $getExistingMember['return_date'] = $reservation_exists['return_date'] ?? null;
+                    $getExistingMember['travel_id'] = $reservation_exists['travel_id'] ?? null;
+                }
+
+                return $this->successResponse($getExistingMember, 'User already exists', 200);
+            } else {
+                $flightReserveReq = [
+                    'arrival_date' => !empty($responseData['data']['arrival_date']) ? Carbon::parse($responseData['data']['arrival_date'])->format('Y-m-d') : null,
+                    'return_date' => !empty($responseData['data']['return_date']) ? Carbon::parse($responseData['data']['return_date'])->format('Y-m-d') : null,
+                ];
+
+                $create_member = $this->membershipRepository->createMembership($membersValidatedData, $usersValidatedData, $flightReserveReq);
+
+                if ($create_member) {
+                    $getExistingMember = $this->membershipRepository->getMembershipNo(
+                        $responseData['data']['member_number'],
+                        $create_member['reservation']['travel_id'] ?? null
+                    );
+
+                    if (!empty($create_member['reservation'])) {
+                        $getExistingMember['travel_id'] = $create_member['reservation']['travel_id'];
+                    }
+
+                    return $this->successResponse($getExistingMember, 'Successfully added new member', 200);
+                }
+
+                return response()->json([
+                    'success' => false,
+                    'error'   => 'Failed to create new member',
+                ], 400);
             }
         } catch (\Exception $e) {
             return $this->errorResponse($e, 'Error', 400);
