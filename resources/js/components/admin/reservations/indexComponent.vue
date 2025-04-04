@@ -167,12 +167,12 @@
                         </td> -->
 
                         <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            {{  res.users.name }}
+                            {{  res.users.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}
                         </td>
                         <td class="px-6 py-4">{{ res.users.address }}</td>
-                        <td class="px-6 py-4">{{ res.users.birthdate }}</td>
-                        <td class="px-6 py-4">{{ res.arrival_date }}</td>
-                        <td class="px-6 py-4">{{ res.return_date }}</td>
+                        <td class="px-6 py-4">{{ new Date(res.users.birthdate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}}</td>
+                        <td class="px-6 py-4">{{ new Date(res.arrival_date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}}</td>
+                        <td class="px-6 py-4">{{ new Date(res.return_date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}}</td>
                         <td>
                             <div class="relative group inline-block">
                                 <button

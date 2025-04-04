@@ -541,10 +541,10 @@ export default {
         const autoFillForm = () => {
             if (infoDetails) {
                 emailAddress.value = infoDetails.email_address || "";
-                fullName.value = infoDetails.member_name || "";
+                fullName.value = infoDetails.member_name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') || "";
                 contactNumber.value = infoDetails.contact_no || "";
                 birthDate.value = infoDetails.birthdate || "";
-                address.value = infoDetails.member_address || "";
+                address.value = infoDetails.member_address.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') || "";
                 userType.value = infoDetails.role_name || "";
                 membershipNo.value = infoDetails.membership_no || "";
                 membershipId.value = infoDetails.membership_id || "";

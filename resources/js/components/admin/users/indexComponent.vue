@@ -157,12 +157,12 @@
                         </td> -->
 
                         <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            {{  res.user_info.name }}
+                            {{  res.user_info.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')  }}
                         </td>
-                        <td class="px-6 py-4">{{ res.user_info.email_address }}</td>
+                        <td class="px-6 py-4">{{ res.user_info.email_address.toLowerCase() }}</td>
                         <td class="px-6 py-4">{{ new Date(res.user_info.birthdate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}}</td>
-                        <td class="px-6 py-4">{{ Array.isArray(res.travel_info) ? res.travel_info.map(flight => flight.arrival_date).join("") : null }}</td>
-                        <td class="px-6 py-4">{{ Array.isArray(res.travel_info) ? res.travel_info.map(flight => flight.return_date).join("") : null }}</td>
+                        <td class="px-6 py-4">{{ Array.isArray(res.travel_info) ? res.travel_info.map(flight => new Date(flight.arrival_date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })).join("") : null }}</td>
+                        <td class="px-6 py-4">{{ Array.isArray(res.travel_info) ? res.travel_info.map(flight => new Date(flight.return_date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })).join("") : null }}</td>
                         <td class="px-6 py-4 relative">
                             <div class="relative inline-block">
                                 <!-- QR Code Image -->
